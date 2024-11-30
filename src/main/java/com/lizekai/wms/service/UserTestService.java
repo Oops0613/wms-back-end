@@ -2,6 +2,7 @@ package com.lizekai.wms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.UserTestDto;
 import com.lizekai.wms.domain.entity.UserTest;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface UserTestService extends IService<UserTest> {
-    public ResponseResult getAllUser(Long pageNum,Long pageSize);
+    public ResponseResult listUser(UserTestDto dto);
 
     ResponseResult addUser(UserTest user);
+
+    ResponseResult editUser(UserTest user);
 }
 
