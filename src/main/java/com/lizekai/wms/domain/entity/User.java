@@ -1,5 +1,6 @@
 package com.lizekai.wms.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
@@ -20,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName(value="sys_user")
-public class User {
+public class User implements Serializable {
 
     private Long id;
     //用户名

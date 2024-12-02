@@ -1,10 +1,15 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.entity.LoginUser;
 import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.handler.exception.SystemException;
+import com.lizekai.wms.service.SystemLoginService;
 import com.lizekai.wms.service.UserService;
 import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +19,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SystemLoginService systemLoginService;
 
     //--------------------------------查询用户列表-------------------------------------
 
@@ -40,5 +47,34 @@ public class UserController {
         }
         userService.removeById(userId);
         return ResponseResult.okResult();
+    }
+
+
+    @PostMapping("/login")
+    public ResponseResult login(@RequestBody User user){
+        if(!StringUtils.hasText(user.getUserName())){
+            //提示 必须要传用户名
+            throw new SystemException(AppHttpCodeEnum.REQUIRE_USERNAME);
+        }
+        return systemLoginService.login(user);
+    }
+    @GetMapping("/getInfo")
+    public ResponseResult getInfo(){
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        //Long userId=loginUser.getUser().getId();
+
+        //List<String> perms = menuService.selectPermsByUserId(userId);
+
+        //List<String> roleKeyList=roleService.selectRoleKeyByUserId(userId);
+
+        //UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
+
+        //AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
+
+        return ResponseResult.okResult(loginUser);
+    }
+    @PostMapping("/logout")
+    public ResponseResult logout(){
+        return systemLoginService.logout();
     }
 }
