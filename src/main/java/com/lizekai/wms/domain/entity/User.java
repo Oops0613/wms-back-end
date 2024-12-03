@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName(value="sys_user")
-public class User implements Serializable {
+public class User {
 
     private Long id;
     //用户名
