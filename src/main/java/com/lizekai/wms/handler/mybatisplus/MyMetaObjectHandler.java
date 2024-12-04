@@ -8,13 +8,10 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * @author 35238
- * @date 2023/7/26 0026 20:52
+ * MyBatis字段自动填充配置类
+ * 通过实现MetaObjectHandler类并重写方法完成
  */
 @Component
-//这个类是用来配置mybatis的字段自动填充。用于'发送评论'功能，由于我们在评论表无法对下面这四个字段进行插入数据(原因是前端在发送评论时，没有在
-//请求体提供下面四个参数，所以后端在往数据库插入数据时，下面四个字段是空值)，所有就需要这个类来帮助我们往下面这四个字段自动的插入值，
-//只要我们更新了评论表的字段，那么无法插入值的字段就自动有值了
 public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
@@ -38,6 +35,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName("updateTime", new Date(), metaObject);
-        this.setFieldValByName(" ", SecurityUtils.getUserId(), metaObject);
+        this.setFieldValByName("updateBy", SecurityUtils.getUserId(), metaObject);
     }
 }

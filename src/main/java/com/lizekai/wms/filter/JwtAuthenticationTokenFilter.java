@@ -22,6 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * 自定义请求过滤器
+ */
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
@@ -29,10 +32,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token=request.getHeader("token");
+        //没有token的请求直接放行
         if(!StringUtils.hasText(token)){
             filterChain.doFilter(request,response);
             return;
         }
+        //尝试用token查询用户信息
         Claims claims=null;
         try {
             claims= JwtUtil.parseJWT(token);
@@ -44,7 +49,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return;
         }
         String userId=claims.getSubject();
-
+        //从redis中拿到完整的当前登录用户
         LoginUser loginUser= redisCache.getCacheObject("WMSLogin:"+userId);
 
         if(Objects.isNull(loginUser)){

@@ -17,10 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * @author 35238
- * @date 2023/7/22 0022 21:39
- */
 @Service
 //认证，判断用户登录是否成功
 public class SystemLoginServiceImpl implements SystemLoginService {
@@ -30,14 +26,13 @@ public class SystemLoginServiceImpl implements SystemLoginService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    //RedisCache是我们在lizekai-framework工程的config目录写的类
     private RedisCache redisCache;
 
     @Override
     public ResponseResult login(User user) {
         //封装登录的用户名和密码
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
-        //在下一行之前，封装的数据会先走UserDetailsServiceImpl实现类，这个实现类在我们的lizekai-framework工程的service/impl目录里面
+        //在下一行之前，封装的数据会先走UserDetailsServiceImpl实现类
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         //上面那一行会得到所有的认证用户信息authenticate。然后下一行需要判断用户认证是否通过，如果authenticate的值是null，就说明认证没有通过
         if(Objects.isNull(authenticate)){
@@ -62,7 +57,6 @@ public class SystemLoginServiceImpl implements SystemLoginService {
 
     @Override
     public ResponseResult logout() {
-        //获取当前登录的用户id。SecurityUtils是我们在huanf-framework工程写的类
         Long userId = SecurityUtils.getUserId();
 
         //删除redis中对应的值

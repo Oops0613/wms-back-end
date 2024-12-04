@@ -16,8 +16,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * @author 35238
- * @date 2023/7/22 0022 21:49
+ * 管理权限控制相关的配置
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -52,9 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/login").anonymous()
+                .antMatchers("/user/login").anonymous()
                 //登出接口需要登录后使用
-                .antMatchers("/logout").authenticated()
+                .antMatchers("/user/logout").authenticated()
                 .antMatchers("/user/userInfo").authenticated()
                 //.antMatchers("/link/getAllLink").authenticated()
 

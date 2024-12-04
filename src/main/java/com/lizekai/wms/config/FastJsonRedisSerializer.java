@@ -12,8 +12,7 @@ import java.nio.charset.Charset;
 
 /**
  * Redis使用FastJson序列化
- * @author 35238
- * @date 2023/7/22 0022 21:12
+ * 可以解决redis key非预期前缀的问题（\xac\xed\x00\x05t\x00）
  */
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T>{
 

@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author 35238
- * @date 2023/7/22 0022 21:18
+ * 用于获取并操作Redis实例
+ * 封装了RedisTemplate的一些基本操作以简化读写等
  */
 @SuppressWarnings(value = { "unchecked", "rawtypes" })
 @Component

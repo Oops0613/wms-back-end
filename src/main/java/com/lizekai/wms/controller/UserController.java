@@ -61,6 +61,7 @@ public class UserController {
     @GetMapping("/getInfo")
     public ResponseResult getInfo(){
         LoginUser loginUser = SecurityUtils.getLoginUser();
+        //TODO@用户信息包括权限信息
         //Long userId=loginUser.getUser().getId();
 
         //List<String> perms = menuService.selectPermsByUserId(userId);

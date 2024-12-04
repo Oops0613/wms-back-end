@@ -6,8 +6,7 @@ import com.lizekai.wms.enums.AppHttpCodeEnum;
 import java.io.Serializable;
 
 /**
- * @author 35238
- * @date 2023/7/19 0019 12:49
+ * 将需要传给前端的数据封装成一个通用的对象
  */
 //统一响应格式。实体类，或者这个类严格来说叫响应体
 @JsonInclude(JsonInclude.Include.NON_NULL)

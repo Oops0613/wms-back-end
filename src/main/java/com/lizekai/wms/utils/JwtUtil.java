@@ -13,15 +13,13 @@ import java.util.UUID;
 
 /**
  * JWT工具类
- * @author 35238
- * @date 2023/7/22 0022 21:18
  */
 public class JwtUtil {
 
     //有效期为
     public static final Long JWT_TTL = 72*60 * 60 *1000L;// 60 * 60 *1000  一个小时
     //设置秘钥明文
-    public static final String JWT_KEY = "huanfqc";
+    public static final String JWT_KEY = "lizekai";
 
     public static String getUUID(){
         String token = UUID.randomUUID().toString().replaceAll("-", "");
@@ -29,7 +27,7 @@ public class JwtUtil {
     }
 
     /**
-     * 生成jtw
+     * 生成jwt
      * @param subject token中要存放的数据（json格式）
      * @return
      */
@@ -39,7 +37,7 @@ public class JwtUtil {
     }
 
     /**
-     * 生成jtw
+     * 生成jwt
      * @param subject token中要存放的数据（json格式）
      * @param ttlMillis token超时时间
      * @return
@@ -62,7 +60,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setId(uuid)              //唯一的ID
                 .setSubject(subject)   // 主题  可以是JSON数据
-                .setIssuer("HF")     // 签发者
+                .setIssuer("LZK")     // 签发者
                 .setIssuedAt(now)      // 签发时间
                 .signWith(signatureAlgorithm, secretKey) //使用HS256对称加密算法签名, 第二个参数为秘钥
                 .setExpiration(expDate);

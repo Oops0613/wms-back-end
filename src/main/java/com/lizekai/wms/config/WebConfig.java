@@ -14,8 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 /**
- * @author 35238
- * @date 2023/7/19 0019 14:57
+ * 前后端消息传递的配置
  */
 @Configuration
 public class  WebConfig implements WebMvcConfigurer {

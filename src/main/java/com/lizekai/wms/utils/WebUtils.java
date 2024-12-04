@@ -6,8 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * @author 35238
- * @date 2023/7/22 0022 21:19
+ * Web相关的工具类
  */
 public class WebUtils {
     /**

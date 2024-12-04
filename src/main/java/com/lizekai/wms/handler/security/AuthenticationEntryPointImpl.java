@@ -16,11 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author 35238
- * @date 2023/7/23 0023 20:34
+ * 自定义认证失败的处理器
  */
 @Component
-//自定义认证失败的处理器。ResponseResult、AppHttpCodeEnum是我们在lizekai-framework工程写的类
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override

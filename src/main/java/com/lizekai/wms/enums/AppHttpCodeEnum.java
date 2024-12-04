@@ -1,8 +1,8 @@
 package com.lizekai.wms.enums;
 
 /**
- * @author 35238
- * @date 2023/7/19 0019 12:52
+ * 自定义消息体枚举类
+ * 与ResponseResult配合使用
  */
 public enum AppHttpCodeEnum {
     // 成功
