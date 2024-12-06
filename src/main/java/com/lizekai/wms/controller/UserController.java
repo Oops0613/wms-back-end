@@ -40,6 +40,10 @@ public class UserController {
     public ResponseResult edit(@RequestBody User user) {
         return userService.editUser(user);
     }
+    @PutMapping("/editPassword")
+    public ResponseResult editPassword(@RequestBody User user) {
+        return userService.editPassword(user);
+    }
     @DeleteMapping("/delete/{userId}")
     public ResponseResult remove(@PathVariable Long userId) {
         if(userId.equals(SecurityUtils.getUserId())){

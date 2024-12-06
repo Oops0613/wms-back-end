@@ -28,6 +28,8 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
     @Override
     public ResponseResult selectUserList(User user, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
@@ -93,6 +95,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public ResponseResult getUserById(Long userId) {
         User user=getById(userId);
+        return ResponseResult.okResult(user);
+    }
+
+    @Override
+    public ResponseResult editPassword(User user) {
+        if(!StringUtils.hasText(user.getPassword())){
+            throw new SystemException(AppHttpCodeEnum.PASSWORD_NOT_NULL);
+        }
+        Long id=user.getId();
+        String encodedPwd=passwordEncoder.encode(user.getPassword());
+        userMapper.updatePasswordById(id,encodedPwd);
         return ResponseResult.okResult(user);
     }
 
