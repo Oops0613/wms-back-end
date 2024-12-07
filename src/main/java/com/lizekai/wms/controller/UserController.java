@@ -2,9 +2,12 @@ package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.LoginUser;
+import com.lizekai.wms.domain.entity.Menu;
 import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.vo.RoutersVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
+import com.lizekai.wms.service.MenuService;
 import com.lizekai.wms.service.SystemLoginService;
 import com.lizekai.wms.service.UserService;
 import com.lizekai.wms.utils.SecurityUtils;
@@ -17,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    @Autowired
+    private MenuService menuService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -81,5 +86,13 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseResult logout(){
         return systemLoginService.logout();
+    }
+    @GetMapping("/getRouters")
+    public ResponseResult<RoutersVo> getRouters(){
+        Long userId=SecurityUtils.getUserId();
+
+        List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
+
+        return ResponseResult.okResult(new RoutersVo(menus));
     }
 }
