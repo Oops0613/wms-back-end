@@ -10,36 +10,29 @@ import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- * 货物表(Goods)表实体类
+ * 角色信息表(Role)表实体类
  *
  * @author makejava
- * @since 2024-12-01 11:26:23
+ * @since 2024-12-10 15:31:36
  */
 @SuppressWarnings("serial")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value="wms_goods")
-public class Goods {
-
+@TableName(value="sys_role")
+public class Role {
+    //角色ID
     private Long id;
-    //货物名
-    private String name;
-    //所属分类id
-    private Long categoryId;
-    //库存数量
-    private Double amount;
-    //计量单位
-    private String unit;
-    //每单位所占容积
-    private Double volumePerUnit;
-    //低库存阈值
-    private Double lowThreshold;
-    //高库存阈值
-    private Double highThreshold;
-    //状态0:正常,1禁用
+    //角色名称
+    private String roleName;
+    //角色权限字符串
+    private String roleKey;
+    //显示顺序
+    private Integer roleSort;
+    //角色状态（0正常 1停用）
     private String status;
-
+    //删除标志（0代表存在 1代表删除）
+    private String delFlag;
     @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     @TableField(fill = FieldFill.INSERT)
@@ -48,10 +41,11 @@ public class Goods {
     private Long updateBy;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
-    //删除标志（0代表未删除，1代表已删除）
-    private Integer delFlag;
     //备注
     private String remark;
+    //关联菜单id数组，不是表中的字段  用来接收参数使用
+    @TableField(exist = false)
+    private Long[] menuIds;
 
 }
 

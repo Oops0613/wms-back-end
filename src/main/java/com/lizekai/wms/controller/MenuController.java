@@ -4,6 +4,7 @@ import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Menu;
 import com.lizekai.wms.domain.vo.MenuTreeVo;
 import com.lizekai.wms.domain.vo.MenuVo;
+import com.lizekai.wms.domain.vo.RoleMenuTreeSelectVo;
 import com.lizekai.wms.service.MenuService;
 import com.lizekai.wms.utils.BeanCopyUtils;
 import com.lizekai.wms.utils.SystemConverter;
@@ -17,7 +18,7 @@ import java.util.List;
  * @date 2023/8/10 0010 10:54
  */
 @RestController
-@RequestMapping("/system/menu")
+@RequestMapping("/menu")
 public class MenuController {
 
     @Autowired
@@ -69,7 +70,7 @@ public class MenuController {
 //        menuService.removeById(menuId);
 //        return ResponseResult.okResult();
 //    }
-//
+
     //----------------------------新增角色-获取菜单下拉树列表-------------------------------
 
 
@@ -82,18 +83,18 @@ public class MenuController {
     }
     @GetMapping("/selectRouteTree")
     public ResponseResult selectRouteTree() {
-        //复用之前的selectMenuList方法。方法需要参数，参数可以用来进行条件查询，而这个方法不需要条件，所以直接new Menu()传入
+        //查询出需要展示在侧边栏的路由
         List<MenuTreeVo> options = menuService.selectRouteTree();
         return ResponseResult.okResult(options);
     }
-//    //---------------------修改角色-根据角色id查询对应角色菜单列表树--------------------------
-//
-//    @GetMapping(value = "/roleMenuTreeselect/{roleId}")
-//    public ResponseResult roleMenuTreeSelect(@PathVariable("roleId") Long roleId) {
-//        List<Menu> menus = menuService.selectMenuList(new Menu());
-//        List<Long> checkedKeys = menuService.selectMenuListByRoleId(roleId);
-//        List<MenuTreeVo> menuTreeVos = SystemConverter.buildMenuSelectTree(menus);
-//        RoleMenuTreeSelectVo vo = new RoleMenuTreeSelectVo(checkedKeys,menuTreeVos);
-//        return ResponseResult.okResult(vo);
-//    }
+    //---------------------修改角色-根据角色id查询对应角色菜单列表树--------------------------
+
+    @GetMapping(value = "/roleMenuTreeselect/{roleId}")
+    public ResponseResult roleMenuTreeSelect(@PathVariable("roleId") Long roleId) {
+        List<Menu> menus = menuService.selectMenuList(new Menu());
+        List<Long> checkedKeys = menuService.selectMenuListByRoleId(roleId);
+        List<MenuTreeVo> menuTreeVos = SystemConverter.buildMenuSelectTree(menus);
+        RoleMenuTreeSelectVo vo = new RoleMenuTreeSelectVo(checkedKeys,menuTreeVos);
+        return ResponseResult.okResult(vo);
+    }
 }
