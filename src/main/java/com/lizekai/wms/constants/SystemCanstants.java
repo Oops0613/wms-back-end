@@ -69,4 +69,8 @@ public class SystemCanstants {
      * 判断为管理员用户
      */
     public static final String IS_ADMAIN = "1";
+    /**
+     * 所有新增用户的初始密码
+     */
+    public static final String ORIGINAL_PASSWORD="1234";
 }

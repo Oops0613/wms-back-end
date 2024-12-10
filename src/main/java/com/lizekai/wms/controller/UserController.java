@@ -45,6 +45,10 @@ public class UserController {
     public ResponseResult edit(@RequestBody User user) {
         return userService.editUser(user);
     }
+    @PostMapping("/resetPassword/{userId}")
+    public ResponseResult resetPassword(@PathVariable Long userId){
+        return userService.resetPassword(userId);
+    }
     @PutMapping("/editPassword")
     public ResponseResult editPassword(@RequestBody User user) {
         return userService.editPassword(user);

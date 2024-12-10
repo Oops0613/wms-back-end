@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
@@ -54,9 +55,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(!StringUtils.hasText(user.getRealName())){
             throw new SystemException(AppHttpCodeEnum.REALNAME_NOT_NULL);
         }
-        if(!StringUtils.hasText(user.getPassword())){
-            throw new SystemException(AppHttpCodeEnum.PASSWORD_NOT_NULL);
-        }
+        //密码新增时自动填充初始密码
+//        if(!StringUtils.hasText(user.getPassword())){
+//            throw new SystemException(AppHttpCodeEnum.PASSWORD_NOT_NULL);
+//        }
         if(!StringUtils.hasText(user.getEmail())){
             throw new SystemException(AppHttpCodeEnum.EMAIL_NOT_NULL);
         }
@@ -64,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(existUserName(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
         save(user);
 //TODO@用户角色
 //        if(!ArrayUtils.isEmpty(user.getRoleIds())){
@@ -107,6 +109,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String encodedPwd=passwordEncoder.encode(user.getPassword());
         userMapper.updatePasswordById(id,encodedPwd);
         return ResponseResult.okResult(user);
+    }
+
+    @Override
+    public ResponseResult resetPassword(Long userId) {
+        User user=getById(userId);
+        user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
+        updateById(user);
+        return ResponseResult.okResult();
     }
 
     private boolean existUserName(String userName){
