@@ -24,6 +24,7 @@ public enum AppHttpCodeEnum {
     EMAIL_NOT_NULL(511, "邮箱不能为空"),
     NICKNAME_EXIST(512, "昵称已经存在"),
     PHONENUMBER_NOT_NULL(521, "手机号码不能为空"),
+    ROLE_NOT_NULL(522,"角色不能为空"),
     FILE_SIZE_ERROR(413, "文件大小不能超出2MB");
     int code;
     String msg;

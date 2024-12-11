@@ -67,10 +67,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(!StringUtils.hasText(user.getEmail())){
             throw new SystemException(AppHttpCodeEnum.EMAIL_NOT_NULL);
         }
+        if(!StringUtils.hasText(user.getRoleId().toString())){
+            throw new SystemException(AppHttpCodeEnum.ROLE_NOT_NULL);
+        }
         // 用户名是否重复
         if(existUserName(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
         }
+
         user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
         save(user);
 //TODO@用户角色
@@ -93,6 +97,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         if(!StringUtils.hasText(user.getEmail())){
             throw new SystemException(AppHttpCodeEnum.EMAIL_NOT_NULL);
+        }
+        if(!StringUtils.hasText(user.getRoleId().toString())){
+            throw new SystemException(AppHttpCodeEnum.ROLE_NOT_NULL);
         }
         // 更新用户信息
         updateById(user);

@@ -33,15 +33,16 @@ public interface MenuMapper extends BaseMapper<Menu> {
             " m.parent_id,m.order_num")
     List<Menu> selectAllRouterMenu();
     //查询普通用户的路由信息(权限菜单)
+    //考虑到一个用户只能有一个角色，弃用sys_user_role表
     @Select(" SELECT " +
             " DISTINCT m.id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status, " +
             " IFNULL(m.perms,'') AS perms, m.is_frame,  m.menu_type, m.icon, m.order_num, m.create_time " +
             " FROM " +
-            " `sys_user_role` ur " +
-            " LEFT JOIN `sys_role_menu` rm ON ur.`role_id` = rm.`role_id` " +
+            " `sys_user` u " +
+            " LEFT JOIN `sys_role_menu` rm ON u.`role_id` = rm.`role_id` " +
             " LEFT JOIN `sys_menu` m ON m.`id` = rm.`menu_id` " +
             " WHERE " +
-            " ur.`user_id` = #{userId} AND " +
+            " u.`id` = #{userId} AND " +
             " m.`menu_type` IN ('C','M') AND " +
             " m.`status` = 0 AND " +
             " m.`del_flag` = 0 " +
