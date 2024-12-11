@@ -38,9 +38,10 @@ public class UserController {
         return userService.addUser(user);
     }
     @GetMapping(value = { "/{userId}" })
-    public ResponseResult getUserInfoAndRoleIds(@PathVariable(value = "userId") Long userId) {
+    public ResponseResult getUserInfo(@PathVariable(value = "userId") Long userId) {
         return userService.getUserById(userId);
     }
+
     @PutMapping("/edit")
     public ResponseResult edit(@RequestBody User user) {
         return userService.editUser(user);

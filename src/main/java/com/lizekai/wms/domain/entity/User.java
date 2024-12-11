@@ -24,6 +24,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class User {
 
     private Long id;
+    //角色ID
+    private Long roleId;
     //用户名
     private String userName;
     //姓名
@@ -52,6 +54,5 @@ public class User {
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
-
 }
 

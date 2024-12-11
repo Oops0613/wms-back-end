@@ -93,6 +93,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return list(wrapper);
     }
 
+    @Override
+    public Role getRoleByUserId(Long userId) {
+        Role role =roleMapper.selectRoleByUserId(userId);
+        return role;
+    }
+
     private void insertRoleMenu(Role role) {
         List<RoleMenu> roleMenuList = Arrays.stream(role.getMenuIds())
                 .map(memuId -> new RoleMenu(role.getId(), memuId))

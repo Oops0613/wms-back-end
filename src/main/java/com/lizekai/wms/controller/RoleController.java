@@ -44,7 +44,6 @@ public class RoleController {
         Role role = roleService.getById(roleId);
         return ResponseResult.okResult(role);
     }
-
     //-------------------------修改角色-保存修改好的角色信息------------------------------
 
     @PutMapping

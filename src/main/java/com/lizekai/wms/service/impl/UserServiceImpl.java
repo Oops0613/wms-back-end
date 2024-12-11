@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.entity.Role;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.UserMapper;
 import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.service.RoleService;
 import com.lizekai.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +33,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RoleService roleService;
     @Override
     public ResponseResult selectUserList(User user, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
@@ -41,6 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         Page<User> page = new Page<>(pageNum,pageSize);
         page(page,queryWrapper);
+        Role role=roleService.getRoleByUserId(user.getId());
 
         //转换成VO
         //List<UserVo> userVos = BeanCopyUtils.copyBeanList(page.getRecords(), UserVo.class);

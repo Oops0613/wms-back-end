@@ -25,5 +25,7 @@ public interface RoleService extends IService<Role> {
     ResponseResult updateRole(Role role);
     //新增用户-①查询角色列表接口
     List<Role> selectRoleAll();
+
+    Role getRoleByUserId(Long userId);
 }
 
