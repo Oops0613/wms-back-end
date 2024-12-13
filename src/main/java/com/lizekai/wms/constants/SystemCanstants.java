@@ -36,9 +36,9 @@ public class SystemCanstants {
      */
     public static final String LINK_STATUS_NORMAL = "0";
     /**
-     * 评论区的某条评论是根评论
+     * 某个分类是一级分类
      */
-    public static final String COMMENT_ROOT = "-1";
+    public static final String CATEGORY_ROOT = "-1";
     /**
      * 文章的评论
      */
