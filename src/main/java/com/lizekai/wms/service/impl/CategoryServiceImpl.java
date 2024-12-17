@@ -39,7 +39,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public ResponseResult updateRole(Category category) {
+    public ResponseResult updateCategory(Category category) {
         updateById(category);
         return ResponseResult.okResult();
     }

@@ -33,7 +33,7 @@ public class CategoryController {
     }
     @PutMapping()
     public ResponseResult updateCategory(@RequestBody Category category){
-        return categoryService.updateRole(category);
+        return categoryService.updateCategory(category);
     }
     @GetMapping("/{id}")
     public ResponseResult getCategoryById(@PathVariable("id") Long id){
