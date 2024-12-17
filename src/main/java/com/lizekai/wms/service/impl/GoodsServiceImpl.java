@@ -1,10 +1,20 @@
 package com.lizekai.wms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.entity.Category;
+import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.domain.entity.Goods;
 import com.lizekai.wms.service.GoodsService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 货物表(Goods)表服务实现类
@@ -15,5 +25,42 @@ import org.springframework.stereotype.Service;
 @Service("goodsService")
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
 
+    @Override
+    public ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(goods.getName()),Goods::getName,goods.getName());
+        wrapper.eq(!Objects.isNull(goods.getCategoryId()),Goods::getCategoryId,goods.getCategoryId());
+
+        Page<Goods> page = new Page<>(pageNum,pageSize);
+        page(page,wrapper);
+        return ResponseResult.okResult(new PageVo(page.getRecords(),page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult addGoods(Goods goods) {
+        save(goods);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult updateGoods(Goods goods) {
+        updateById(goods);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult getGoodsById(Long id) {
+        return ResponseResult.okResult(getById(id));
+    }
+
+    @Override
+    public ResponseResult deleteGoods(Long id) {
+        Goods goods=getById(id);
+        if(!Objects.isNull(goods)&&goods.getAmount()>0){
+            return ResponseResult.errorResult(500,"该货物正在使用中，无法删除");
+        }
+        removeById(id);
+        return ResponseResult.okResult();
+    }
 }
 

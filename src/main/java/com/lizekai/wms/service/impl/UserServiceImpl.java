@@ -45,7 +45,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         Page<User> page = new Page<>(pageNum,pageSize);
         page(page,queryWrapper);
-        Role role=roleService.getRoleByUserId(user.getId());
 
         //转换成VO
         //List<UserVo> userVos = BeanCopyUtils.copyBeanList(page.getRecords(), UserVo.class);

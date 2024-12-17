@@ -1,6 +1,8 @@
 package com.lizekai.wms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.entity.Category;
 import com.lizekai.wms.domain.entity.Goods;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface GoodsService extends IService<Goods> {
+    ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize);
+    ResponseResult addGoods(Goods goods);
 
+    ResponseResult updateGoods(Goods goods);
+
+    ResponseResult getGoodsById(Long id);
+
+    ResponseResult deleteGoods(Long id);
 }
 

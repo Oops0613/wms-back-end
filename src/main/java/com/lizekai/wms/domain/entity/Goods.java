@@ -52,6 +52,8 @@ public class Goods {
     private Integer delFlag;
     //备注
     private String remark;
+    //过期适用标志（0无1有）
+    private String hasExpirationTime;
 
 }
 
