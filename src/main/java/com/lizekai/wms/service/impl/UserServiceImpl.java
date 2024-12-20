@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 用户表(User)表服务实现类
@@ -37,14 +38,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RoleService roleService;
     @Override
     public ResponseResult selectUserList(User user, Integer pageNum, Integer pageSize) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper();
 
-        queryWrapper.like(StringUtils.hasText(user.getUserName()),User::getUserName, user.getUserName());
-        queryWrapper.like(StringUtils.hasText(user.getRealName()),User::getRealName, user.getRealName());
-        queryWrapper.eq(StringUtils.hasText(user.getPhonenumber()),User::getPhonenumber, user.getPhonenumber());
+        wrapper.like(StringUtils.hasText(user.getUserName()),User::getUserName, user.getUserName());
+        wrapper.like(StringUtils.hasText(user.getRealName()),User::getRealName, user.getRealName());
+        wrapper.eq(StringUtils.hasText(user.getPhonenumber()),User::getPhonenumber, user.getPhonenumber());
+        wrapper.eq(Objects.nonNull(user.getRoleId()),User::getRoleId,user.getRoleId());
 
         Page<User> page = new Page<>(pageNum,pageSize);
-        page(page,queryWrapper);
+        page(page,wrapper);
 
         //转换成VO
         //List<UserVo> userVos = BeanCopyUtils.copyBeanList(page.getRecords(), UserVo.class);
