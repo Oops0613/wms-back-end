@@ -6,20 +6,14 @@ import com.lizekai.wms.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 35238
- * @date 2023/7/20 0020 14:15
- */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
-    //CategoryService是我们在huanf-framework工程里面写的接口
     private CategoryService categoryService;
 
     @GetMapping("/list")
-    //ResponseResult是我们在huanf-framework工程里面写的实体类
     public ResponseResult getCategoryList(Category category){
         return categoryService.getCategoryList(category);
     }

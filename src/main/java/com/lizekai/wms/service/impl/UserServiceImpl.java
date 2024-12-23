@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -61,10 +60,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(!StringUtils.hasText(user.getRealName())){
             throw new SystemException(AppHttpCodeEnum.REALNAME_NOT_NULL);
         }
-        //密码新增时自动填充初始密码
-//        if(!StringUtils.hasText(user.getPassword())){
-//            throw new SystemException(AppHttpCodeEnum.PASSWORD_NOT_NULL);
-//        }
         if(!StringUtils.hasText(user.getEmail())){
             throw new SystemException(AppHttpCodeEnum.EMAIL_NOT_NULL);
         }
@@ -75,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(existUserName(user.getUserName())){
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
         }
-
+        //新增时自动填充初始密码
         user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
         save(user);
 //TODO@用户角色

@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * @author 35238
- * @date 2023/8/10 0010 10:54
- */
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
