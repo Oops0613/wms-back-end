@@ -1,5 +1,6 @@
 package com.lizekai.wms.controller;
 
+import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Role;
 import com.lizekai.wms.service.RoleService;
@@ -35,13 +36,16 @@ public class RoleController {
 
     @PutMapping
     public ResponseResult edit(@RequestBody Role role) {
-        roleService.updateRole(role);
-        return ResponseResult.okResult();
+        return roleService.updateRole(role);
     }
     //--------------------------------删除角色---------------------------------------
 
     @DeleteMapping("/{id}")
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
+        //不能删除超级管理员
+        if(SystemCanstants.IS_ADMAIN.equals(id.toString())){
+            return ResponseResult.errorResult(500,"不能删除超级管理员");
+        }
         roleService.removeById(id);
         return ResponseResult.okResult();
     }
