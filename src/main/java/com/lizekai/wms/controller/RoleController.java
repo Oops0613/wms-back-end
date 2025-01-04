@@ -43,7 +43,7 @@ public class RoleController {
     @DeleteMapping("/{id}")
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
         //不能删除超级管理员
-        if(SystemCanstants.IS_ADMAIN.equals(id.toString())){
+        if(SystemCanstants.IS_ADMIN.equals(id.toString())){
             return ResponseResult.errorResult(500,"不能删除超级管理员");
         }
         roleService.removeById(id);

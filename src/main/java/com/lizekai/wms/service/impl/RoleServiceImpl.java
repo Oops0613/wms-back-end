@@ -82,7 +82,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResponseResult updateRole(Role role) {
         //不能修改超级管理员
-        if(SystemCanstants.IS_ADMAIN.equals(role.getId().toString())){
+        if(SystemCanstants.IS_ADMIN.equals(role.getId().toString())){
             return ResponseResult.errorResult(500,"不能修改超级管理员");
         }
         updateById(role);
