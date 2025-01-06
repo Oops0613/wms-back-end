@@ -41,6 +41,11 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult updateWarehouse(Warehouse warehouse) {
+        Warehouse old=getById(warehouse.getId());
+        if(old.getRemainingCapacity()<old.getCapacity()){
+            return ResponseResult.errorResult(500,"该仓库正在使用中，无法修改");
+        }
+        warehouse.setRemainingCapacity(warehouse.getCapacity());
         updateById(warehouse);
         return ResponseResult.okResult();
     }
