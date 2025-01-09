@@ -31,6 +31,8 @@ public class Goods {
     private Double amount;
     //计量单位
     private String unit;
+    //单位价格
+    private Double pricePerUnit;
     //每单位所占容积
     private Double volumePerUnit;
     //低库存阈值
