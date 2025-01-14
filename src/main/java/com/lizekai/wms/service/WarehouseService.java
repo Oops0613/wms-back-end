@@ -22,5 +22,7 @@ public interface WarehouseService extends IService<Warehouse> {
     ResponseResult getWarehouseById(Long id);
 
     ResponseResult deleteWarehouse(Long id);
+
+    ResponseResult listAllWarehouse();
 }
 

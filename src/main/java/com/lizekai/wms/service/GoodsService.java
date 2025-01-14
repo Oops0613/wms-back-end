@@ -24,5 +24,7 @@ public interface GoodsService extends IService<Goods> {
     ResponseResult deleteGoods(Long id);
     //某个分类下是否有货物
     boolean hasGoodsByCategory(Long categoryId);
+
+    ResponseResult listAllGoods();
 }
 

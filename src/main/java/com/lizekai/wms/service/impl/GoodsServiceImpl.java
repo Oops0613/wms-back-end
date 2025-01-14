@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Category;
 import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.entity.Warehouse;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.domain.entity.Goods;
@@ -67,6 +68,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Goods::getCategoryId, categoryId);
         return count(wrapper) > 0;
+    }
+
+    @Override
+    public ResponseResult listAllGoods() {
+        LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
+        return ResponseResult.okResult(list(wrapper));
     }
 }
 

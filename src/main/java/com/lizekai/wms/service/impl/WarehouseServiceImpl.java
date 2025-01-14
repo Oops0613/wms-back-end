@@ -64,5 +64,11 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         removeById(id);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult listAllWarehouse() {
+        LambdaQueryWrapper<Warehouse> wrapper=new LambdaQueryWrapper<>();
+        return ResponseResult.okResult(list(wrapper));
+    }
 }
 

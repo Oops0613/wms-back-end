@@ -12,6 +12,10 @@ public class WarehouseController {
     @Autowired
     private WarehouseService warehouseService;
 
+    @GetMapping("/listAll")
+    public ResponseResult listAllWarehouse(){
+        return warehouseService.listAllWarehouse();
+    }
     @GetMapping("/list")
     public ResponseResult getWarehouseList(Warehouse warehouse, Integer pageNum, Integer pageSize){
         return warehouseService.getWarehouseList(warehouse,pageNum,pageSize);

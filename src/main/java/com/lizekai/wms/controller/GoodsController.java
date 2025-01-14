@@ -16,6 +16,10 @@ public class GoodsController {
     public ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize){
         return goodsService.getGoodsList(goods,pageNum,pageSize);
     }
+    @GetMapping("/listAll")
+    public ResponseResult listAllGoods(){
+        return goodsService.listAllGoods();
+    }
     @PostMapping
     public ResponseResult addGoods(@RequestBody Goods goods){
         return goodsService.addGoods(goods);

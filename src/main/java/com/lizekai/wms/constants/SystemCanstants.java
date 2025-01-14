@@ -31,4 +31,21 @@ public class SystemCanstants {
      * 所有新增用户的初始密码
      */
     public static final String ORIGINAL_PASSWORD="1234";
+    /**
+     * 查询时忽略数量为0的库存
+     */
+    public static final String IGNORE_ZERO="1";
+    /**
+     * 入库申请类型
+     */
+    public static final String IN_APPLY="1";
+    /**
+     * 出库申请类型
+     */
+    public static final String OUT_APPLY="2";
+    /**
+     * 调拨申请类型
+     */
+    public static final String ALLOT_APPLY="3";
+
 }
