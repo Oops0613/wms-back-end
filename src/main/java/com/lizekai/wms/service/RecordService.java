@@ -23,5 +23,6 @@ public interface RecordService extends IService<Record> {
     //获取调拨申请分页列表
     ResponseResult getAllotApplyList(RecordListDto dto, Integer pageNum, Integer pageSize);
 
+    ResponseResult getApplyById(Long id);
 }
 

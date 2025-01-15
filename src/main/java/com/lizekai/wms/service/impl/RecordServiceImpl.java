@@ -6,11 +6,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.RecordListDto;
+import com.lizekai.wms.domain.entity.Goods;
 import com.lizekai.wms.domain.entity.Inventory;
+import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.vo.ApplyDetailVo;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.mapper.RecordMapper;
 import com.lizekai.wms.domain.entity.Record;
+import com.lizekai.wms.service.GoodsService;
 import com.lizekai.wms.service.RecordService;
+import com.lizekai.wms.service.UserService;
+import com.lizekai.wms.utils.BeanCopyUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +31,10 @@ import java.util.Objects;
  */
 @Service("recordService")
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements RecordService {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private GoodsService goodsService;
 
     @Override
     public ResponseResult getRecordList(RecordListDto dto, Integer pageNum, Integer pageSize) {
@@ -96,6 +107,25 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Page<Record> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
+    }
+
+    @Override
+    public ResponseResult getApplyById(Long id) {
+        Record record=getById(id);
+        ApplyDetailVo vo = BeanCopyUtils.copyBean(record, ApplyDetailVo.class);
+        User applyUser = userService.getById(record.getApplyBy());
+        User approveUser = userService.getById(record.getApproveBy());
+        Goods goods =goodsService.getById(record.getGoodsId());
+        if(Objects.nonNull(applyUser)){
+            vo.setApplyUserName(applyUser.getRealName());
+        }
+        if(Objects.nonNull(approveUser)){
+            vo.setApproveUserName(approveUser.getRealName());
+        }
+        if(Objects.nonNull(goods)){
+            vo.setVolume(record.getAmount()*goods.getVolumePerUnit());
+        }
+        return ResponseResult.okResult(vo);
     }
 }
 

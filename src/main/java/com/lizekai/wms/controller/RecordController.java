@@ -6,6 +6,7 @@ import com.lizekai.wms.domain.dto.RecordListDto;
 import com.lizekai.wms.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +30,9 @@ public class RecordController {
     @GetMapping("/listAllotApply")
     public ResponseResult getAllotApplyList(RecordListDto dto, Integer pageNum, Integer pageSize){
         return recordService.getAllotApplyList(dto,pageNum,pageSize);
+    }
+    @GetMapping("/{id}")
+    public ResponseResult getApplyById(@PathVariable("id") Long id){
+        return recordService.getApplyById(id);
     }
 }
