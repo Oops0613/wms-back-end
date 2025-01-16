@@ -1,14 +1,13 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.AddApplyDto;
 import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.lizekai.wms.domain.dto.RecordListDto;
+import com.lizekai.wms.domain.entity.Goods;
 import com.lizekai.wms.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/record")
@@ -34,5 +33,9 @@ public class RecordController {
     @GetMapping("/{id}")
     public ResponseResult getApplyById(@PathVariable("id") Long id){
         return recordService.getApplyById(id);
+    }
+    @PostMapping("addInApply")
+    public ResponseResult addInApply(@RequestBody AddApplyDto dto){
+        return recordService.addInApply(dto);
     }
 }

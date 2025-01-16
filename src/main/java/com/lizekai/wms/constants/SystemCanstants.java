@@ -47,5 +47,9 @@ public class SystemCanstants {
      * 调拨申请类型
      */
     public static final String ALLOT_APPLY="3";
+    /**
+     * 货物有过期时间
+     */
+    public static final String CAN_EXPIRE="1";
 
 }

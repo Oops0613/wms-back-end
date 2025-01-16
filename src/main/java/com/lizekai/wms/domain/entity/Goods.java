@@ -27,6 +27,8 @@ public class Goods {
     private String name;
     //所属分类id
     private Long categoryId;
+    //分类名
+    private String categoryName;
     //库存数量
     private Double amount;
     //计量单位

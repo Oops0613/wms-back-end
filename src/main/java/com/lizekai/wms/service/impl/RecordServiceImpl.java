@@ -5,22 +5,23 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.AddApplyDto;
 import com.lizekai.wms.domain.dto.RecordListDto;
-import com.lizekai.wms.domain.entity.Goods;
-import com.lizekai.wms.domain.entity.Inventory;
-import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.entity.*;
 import com.lizekai.wms.domain.vo.ApplyDetailVo;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.mapper.RecordMapper;
-import com.lizekai.wms.domain.entity.Record;
 import com.lizekai.wms.service.GoodsService;
 import com.lizekai.wms.service.RecordService;
 import com.lizekai.wms.service.UserService;
+import com.lizekai.wms.service.WarehouseService;
 import com.lizekai.wms.utils.BeanCopyUtils;
+import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -35,6 +36,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private UserService userService;
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private WarehouseService warehouseService;
 
     @Override
     public ResponseResult getRecordList(RecordListDto dto, Integer pageNum, Integer pageSize) {
@@ -126,6 +129,32 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             vo.setVolume(record.getAmount()*goods.getVolumePerUnit());
         }
         return ResponseResult.okResult(vo);
+    }
+
+    @Override
+    public ResponseResult addInApply(AddApplyDto dto) {
+        Goods goods = goodsService.getById(dto.getGoodsId());
+        User user = SecurityUtils.getLoginUser().getUser();
+        Warehouse warehouse = warehouseService.getById(dto.getToId());
+        Record record=new Record();
+        record.setFromId(-1L);
+        record.setToId(warehouse.getId());
+        record.setToName(warehouse.getName());
+        record.setCategoryId(goods.getCategoryId());
+        record.setCategoryName(goods.getCategoryName());
+        record.setGoodsId(goods.getId());
+        record.setGoodsName(goods.getName());
+        record.setHasExpirationTime(goods.getHasExpirationTime());
+        //货物有过期时间
+        if(SystemCanstants.CAN_EXPIRE.equals(goods.getHasExpirationTime())){
+            record.setExpirationTime(dto.getExpirationTime());
+        }
+        record.setAmount(dto.getAmount());
+        record.setApplyBy(user.getId());
+        record.setApplyRemark(dto.getApplyRemark());
+        record.setApplyTime(new Date());
+        save(record);
+        return ResponseResult.okResult();
     }
 }
 
