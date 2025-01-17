@@ -12,6 +12,8 @@ import java.util.Date;
 public class ApplyDetailVo {
     //申请ID
     private Long id;
+    //所属库存id
+    private Long inventoryId;
     //源仓库名
     private String fromName;
     //目的仓库名

@@ -10,6 +10,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddApplyDto {
+    //库存id（入库不传）
+    private Long inventoryId;
     //货物id
     private Long goodsId;
     //源仓库id,入库记录为-1

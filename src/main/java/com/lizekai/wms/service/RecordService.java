@@ -27,5 +27,9 @@ public interface RecordService extends IService<Record> {
     ResponseResult getApplyById(Long id);
 
     ResponseResult addInApply(AddApplyDto dto);
+
+    ResponseResult addOutApply(AddApplyDto dto);
+
+    ResponseResult addAllotApply(AddApplyDto dto);
 }
 

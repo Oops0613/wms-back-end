@@ -38,4 +38,12 @@ public class RecordController {
     public ResponseResult addInApply(@RequestBody AddApplyDto dto){
         return recordService.addInApply(dto);
     }
+    @PostMapping("addOutApply")
+    public ResponseResult addOutApply(@RequestBody AddApplyDto dto){
+        return recordService.addOutApply(dto);
+    }
+    @PostMapping("addAllotApply")
+    public ResponseResult addAllotApply(@RequestBody AddApplyDto dto){
+        return recordService.addAllotApply(dto);
+    }
 }
