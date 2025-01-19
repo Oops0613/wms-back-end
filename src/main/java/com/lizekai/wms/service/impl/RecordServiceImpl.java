@@ -72,6 +72,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Long toId = dto.getToId();
         Long categoryId = dto.getCategoryId();
         String goodsName = dto.getGoodsName();
+        String approveStatus= dto.getApproveStatus();
         wrapper.eq(Objects.nonNull(fromId), Record::getFromId, fromId);
         wrapper.eq(Objects.nonNull(toId), Record::getToId, toId);
         if (SystemCanstants.IN_APPLY.equals(type)) {
@@ -83,6 +84,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             wrapper.gt(Record::getToId, 0);
         }
         wrapper.eq(Objects.nonNull(categoryId), Record::getCategoryId, categoryId);
+        wrapper.eq(StringUtils.hasText(approveStatus),Record::getApproveStatus,approveStatus);
         wrapper.like(StringUtils.hasText(goodsName), Record::getGoodsName, goodsName);
         Page<Record> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);

@@ -18,4 +18,6 @@ public class RecordListDto {
     private String goodsName;
     //申请类型（1入库2出库3调拨）
     private String type;
+    //审批状态0:未审批,1审批通过,2审批驳回,3无法审批
+    private String approveStatus;
 }
