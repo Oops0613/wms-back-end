@@ -25,6 +25,9 @@ public enum AppHttpCodeEnum {
     NICKNAME_EXIST(512, "昵称已经存在"),
     PHONENUMBER_NOT_NULL(521, "手机号码不能为空"),
     ROLE_NOT_NULL(522,"角色不能为空"),
+    OUT_OF_CAPACITY(530,"目的仓库剩余容量不足，无法入库"),
+    GOODS_EXPIRED(531,"货物过期，无法入库"),
+    INVENTORY_INSUFFICIENT(532,"该批次库存数量不足，无法出库"),
     FILE_SIZE_ERROR(413, "文件大小不能超出2MB");
     int code;
     String msg;

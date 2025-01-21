@@ -51,5 +51,20 @@ public class SystemCanstants {
      * 货物有过期时间
      */
     public static final String CAN_EXPIRE="1";
-
+    /**
+     * 审批状态：未审批
+     */
+    public static final String NEED_APPROVE="0";
+    /**
+     * 审批状态：审批通过
+     */
+    public static final String APPROVE_PASS="1";
+    /**
+     * 审批状态：审批驳回
+     */
+    public static final String APPROVE_REJECT="2";
+    /**
+     * 审批状态：无法审批
+     */
+    public static final String APPROVE_UNAVAILABLE="3";
 }

@@ -14,6 +14,8 @@ public class ApplyDetailVo {
     private Long id;
     //所属库存id
     private Long inventoryId;
+    //调拨后新产生的库存id
+    private Long newInventoryId;
     //源仓库名
     private String fromName;
     //目的仓库名
@@ -24,6 +26,8 @@ public class ApplyDetailVo {
     private String goodsName;
     //移动数量
     private Double amount;
+    //计量单位
+    private String unit;
     //占据空间
     private Double volume;
     //发起人姓名

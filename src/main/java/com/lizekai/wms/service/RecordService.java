@@ -3,6 +3,7 @@ package com.lizekai.wms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.AddApplyDto;
+import com.lizekai.wms.domain.dto.ApproveDto;
 import com.lizekai.wms.domain.dto.RecordListDto;
 import com.lizekai.wms.domain.entity.Record;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,8 @@ public interface RecordService extends IService<Record> {
     ResponseResult addOutApply(AddApplyDto dto);
 
     ResponseResult addAllotApply(AddApplyDto dto);
+
+    ResponseResult approvePass(ApproveDto dto);
+    ResponseResult approveReject(ApproveDto dto);
 }
 

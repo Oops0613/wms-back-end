@@ -2,6 +2,7 @@ package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.AddApplyDto;
+import com.lizekai.wms.domain.dto.ApproveDto;
 import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.lizekai.wms.domain.dto.RecordListDto;
 import com.lizekai.wms.domain.entity.Goods;
@@ -45,5 +46,13 @@ public class RecordController {
     @PostMapping("addAllotApply")
     public ResponseResult addAllotApply(@RequestBody AddApplyDto dto){
         return recordService.addAllotApply(dto);
+    }
+    @PostMapping("approvePass")
+    public ResponseResult approvePass(@RequestBody ApproveDto dto){
+        return recordService.approvePass(dto);
+    }
+    @PostMapping("approveReject")
+    public ResponseResult approveReject(@RequestBody ApproveDto dto){
+        return recordService.approveReject(dto);
     }
 }

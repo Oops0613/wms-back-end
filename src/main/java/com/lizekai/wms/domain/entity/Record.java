@@ -23,6 +23,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class Record {
 
     private Long id;
+    //申请类型（1入库2出库3调拨）
+    private String type;
     //源仓库id,入库记录为-1
     private Long fromId;
     //源仓库名
@@ -33,6 +35,8 @@ public class Record {
     private String toName;
     //所属库存id
     private Long inventoryId;
+    //调拨后新产生的库存id
+    private Long newInventoryId;
     //分类id
     private Long categoryId;
     //分类名
