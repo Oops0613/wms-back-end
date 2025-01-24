@@ -55,4 +55,8 @@ public class RecordController {
     public ResponseResult approveReject(@RequestBody ApproveDto dto){
         return recordService.approveReject(dto);
     }
+    @PostMapping("preApprove")
+    public ResponseResult preApprove(){
+        return recordService.preApprove();
+    }
 }

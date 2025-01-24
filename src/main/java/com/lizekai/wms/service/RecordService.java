@@ -35,5 +35,7 @@ public interface RecordService extends IService<Record> {
 
     ResponseResult approvePass(ApproveDto dto);
     ResponseResult approveReject(ApproveDto dto);
+
+    ResponseResult preApprove();
 }
 

@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -138,7 +140,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Inventory inventory = new Inventory();
         Record record = getById(dto.getId());
         if (SystemCanstants.IN_APPLY.equals(type)) {
-            //检查目的仓库剩余容量是否足够
             Warehouse warehouse = warehouseService.getById(record.getToId());
             Double remainingCapacity = warehouse.getRemainingCapacity();
             Goods goods = goodsService.getById(record.getGoodsId());
@@ -253,6 +254,89 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         record.setApproveTime(new Date());
         updateById(record);
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 在正式审批之前使用，将未审批和无法审批的申请更正状态
+     */
+    @Override
+    public ResponseResult preApprove() {
+        //获取状态为未审批or无法审批的申请
+        LambdaQueryWrapper<Record> wrapper=new LambdaQueryWrapper<>();
+        wrapper.in(Record::getApproveStatus,
+                Arrays.asList(SystemCanstants.NEED_APPROVE,SystemCanstants.APPROVE_UNAVAILABLE));
+        List<Record> recordList = list(wrapper);
+        //遍历列表，检查条件
+        recordList.forEach(record -> {
+            boolean valid=checkStatus(record);
+            String oldStatus=record.getApproveStatus();
+            //未审批->无法审批
+            if(SystemCanstants.NEED_APPROVE.equals(oldStatus)&&!valid){
+                record.setApproveStatus(SystemCanstants.APPROVE_UNAVAILABLE);
+                updateById(record);
+            }
+            //无法审批->未审批
+            if(SystemCanstants.APPROVE_UNAVAILABLE.equals(oldStatus)&&valid){
+                record.setApproveStatus(SystemCanstants.NEED_APPROVE);
+                updateById(record);
+            }
+        });
+        return ResponseResult.okResult();
+    }
+
+    /**
+     * 检查出入库申请是否能通过预审批
+     * @return true表示通过
+     */
+    private boolean checkStatus(Record record) {
+        String type=record.getType();
+        if (SystemCanstants.IN_APPLY.equals(type)) {
+            //检查目的仓库剩余容量是否足够
+            if (!checkRemainingCapacity(record)){
+                record.setApproveRemark("目的仓库剩余容量不足");
+                return false;
+            }
+            //检查入库货物是否过期
+            if (SystemCanstants.CAN_EXPIRE.equals(record.getHasExpirationTime())
+                    && record.getExpirationTime().before(new Date())) {
+                record.setApproveRemark("入库货物过期");
+                return false;
+            }
+        } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+            //检查该笔库存数量是否足够
+            Inventory inventory=inventoryService.getById(record.getInventoryId());
+            if(inventory.getAmount()<record.getAmount()){
+                record.setApproveRemark("该笔库存数量不足");
+                return false;
+            }
+        } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+            //检查目的仓库剩余容量是否足够
+            if (!checkRemainingCapacity(record)) {
+                record.setApproveRemark("目的仓库剩余容量不足");
+                return false;
+            }
+            //检查该笔库存数量是否足够
+            Inventory inventory=inventoryService.getById(record.getInventoryId());
+            if(inventory.getAmount()<record.getAmount()){
+                record.setApproveRemark("该笔库存数量不足");
+                return false;
+            }
+        }
+        //可以审批，则清除审批备注
+        record.setApproveRemark("");
+        return true;
+    }
+
+    /**
+     * 检查目的仓库剩余容量是否足够
+     * @return 足够=true
+     */
+    private boolean checkRemainingCapacity(Record record) {
+        Warehouse warehouse = warehouseService.getById(record.getToId());
+        Double remainingCapacity = warehouse.getRemainingCapacity();
+        Goods goods = goodsService.getById(record.getGoodsId());
+        double volume=goods.getVolumePerUnit() * record.getAmount();
+        return remainingCapacity >= volume;
     }
 
     /**
