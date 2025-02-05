@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +71,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         //menuName模糊查询
         queryWrapper.like(StringUtils.hasText(menu.getMenuName()),Menu::getMenuName,menu.getMenuName());
         queryWrapper.eq(StringUtils.hasText(menu.getStatus()),Menu::getStatus,menu.getStatus());
+        //忽略按钮类型的菜单
+        queryWrapper.in(Menu::getMenuType, Arrays.asList(SystemCanstants.TYPE_MENU,SystemCanstants.TYPE_TOP_MENU));
         //排序 parent_id和order_num
         queryWrapper.orderByAsc(Menu::getParentId,Menu::getOrderNum);
         List<Menu> menus = list(queryWrapper);
