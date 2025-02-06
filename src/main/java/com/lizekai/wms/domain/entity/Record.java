@@ -47,6 +47,8 @@ public class Record {
     private String goodsName;
     //移动数量
     private Double amount;
+    //所占容积
+    private Double volume;
     //发起人ID
     private Long applyBy;
     //发起时间

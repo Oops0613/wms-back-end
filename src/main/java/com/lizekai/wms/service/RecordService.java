@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface RecordService extends IService<Record> {
 
+    void refreshVolume();
+
     ResponseResult getRecordList(RecordListDto dto, Integer pageNum, Integer pageSize);
     //获取入库申请分页列表
     ResponseResult getInApplyList(RecordListDto dto, Integer pageNum, Integer pageSize);

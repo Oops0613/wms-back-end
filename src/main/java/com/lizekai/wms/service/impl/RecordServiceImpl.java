@@ -18,7 +18,6 @@ import com.lizekai.wms.service.*;
 import com.lizekai.wms.utils.BeanCopyUtils;
 import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -44,6 +43,17 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private WarehouseService warehouseService;
     @Autowired
     private InventoryService inventoryService;
+    @Override
+    public void refreshVolume(){
+        List<Record> recordList = list();
+        recordList.forEach(record -> {
+            Long goodsId=record.getGoodsId();
+            Goods goods=goodsService.getById(goodsId);
+            double volume=goods.getVolumePerUnit()*record.getAmount();
+            record.setVolume(volume);
+            updateById(record);
+        });
+    }
 
     @Override
     public ResponseResult getRecordList(RecordListDto dto, Integer pageNum, Integer pageSize) {

@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 public class RecordController {
     @Autowired
     private RecordService recordService;
+    @PostMapping("/test")
+    public void refreshVolume(){
+        recordService.refreshVolume();
+    }
     @GetMapping("/list")
     public ResponseResult getRecordList(RecordListDto dto, Integer pageNum, Integer pageSize){
         return recordService.getRecordList(dto,pageNum,pageSize);
