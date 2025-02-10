@@ -1,8 +1,10 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetLoadRateDto;
 import com.lizekai.wms.domain.entity.Warehouse;
 import com.lizekai.wms.service.WarehouseService;
+import com.lizekai.wms.service.WarehouseStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class WarehouseController {
     @Autowired
     private WarehouseService warehouseService;
+    @Autowired
+    private WarehouseStatService warehouseStatService;
 
     @GetMapping("/listAll")
     public ResponseResult listAllWarehouse(){
@@ -35,5 +39,13 @@ public class WarehouseController {
     @GetMapping("/{id}")
     public ResponseResult getWarehouseById(@PathVariable("id") Long id){
         return warehouseService.getWarehouseById(id);
+    }
+    @GetMapping("/getLoadRate")
+    public ResponseResult getLoadRate(@RequestBody GetLoadRateDto dto){
+        return warehouseStatService.GetLoadRate(dto);
+    }
+    @GetMapping("/listWarehouseByLoadRate/{bound}")
+    public ResponseResult listWarehouseByLoadRate(@PathVariable("bound") Double bound){
+        return warehouseStatService.listWarehouseByLoadRate(bound);
     }
 }

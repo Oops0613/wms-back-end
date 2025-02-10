@@ -67,4 +67,8 @@ public class SystemCanstants {
      * 审批状态：无法审批
      */
     public static final String APPROVE_UNAVAILABLE="3";
+    /**
+     * 仓库负载纵坐标单位：使用率
+     */
+    public static final String LOAD_RATE="0";
 }

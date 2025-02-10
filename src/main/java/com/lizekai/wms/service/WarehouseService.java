@@ -2,6 +2,7 @@ package com.lizekai.wms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetLoadRateDto;
 import com.lizekai.wms.domain.entity.Warehouse;
 import com.lizekai.wms.domain.entity.Warehouse;
 import org.springframework.stereotype.Service;

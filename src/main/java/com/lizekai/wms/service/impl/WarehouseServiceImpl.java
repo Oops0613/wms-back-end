@@ -11,8 +11,6 @@ import com.lizekai.wms.service.WarehouseService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.Objects;
-
 /**
  * 仓库表(Warehouse)表服务实现类
  *
@@ -24,12 +22,12 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult getWarehouseList(Warehouse warehouse, Integer pageNum, Integer pageSize) {
-        LambdaQueryWrapper<Warehouse> wrapper=new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.hasText(warehouse.getName()),Warehouse::getName,warehouse.getName());
+        LambdaQueryWrapper<Warehouse> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(warehouse.getName()), Warehouse::getName, warehouse.getName());
 
-        Page<Warehouse> page = new Page<>(pageNum,pageSize);
-        page(page,wrapper);
-        return ResponseResult.okResult(new PageVo(page.getRecords(),page.getTotal()));
+        Page<Warehouse> page = new Page<>(pageNum, pageSize);
+        page(page, wrapper);
+        return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
     }
 
     @Override
@@ -41,9 +39,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult updateWarehouse(Warehouse warehouse) {
-        Warehouse old=getById(warehouse.getId());
-        if(old.getRemainingCapacity()<old.getCapacity()){
-            return ResponseResult.errorResult(500,"该仓库正在使用中，无法修改");
+        Warehouse old = getById(warehouse.getId());
+        if (old.getRemainingCapacity() < old.getCapacity()) {
+            return ResponseResult.errorResult(500, "该仓库正在使用中，无法修改");
         }
         warehouse.setRemainingCapacity(warehouse.getCapacity());
         updateById(warehouse);
@@ -57,9 +55,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult deleteWarehouse(Long id) {
-        Warehouse warehouse=getById(id);
-        if(warehouse.getRemainingCapacity()<warehouse.getCapacity()){
-            return ResponseResult.errorResult(500,"该仓库正在使用中，无法删除");
+        Warehouse warehouse = getById(id);
+        if (warehouse.getRemainingCapacity() < warehouse.getCapacity()) {
+            return ResponseResult.errorResult(500, "该仓库正在使用中，无法删除");
         }
         removeById(id);
         return ResponseResult.okResult();
@@ -67,7 +65,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult listAllWarehouse() {
-        LambdaQueryWrapper<Warehouse> wrapper=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Warehouse> wrapper = new LambdaQueryWrapper<>();
         return ResponseResult.okResult(list(wrapper));
     }
 }
