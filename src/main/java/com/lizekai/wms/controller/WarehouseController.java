@@ -41,7 +41,7 @@ public class WarehouseController {
         return warehouseService.getWarehouseById(id);
     }
     @GetMapping("/getLoadRate")
-    public ResponseResult getLoadRate(@RequestBody GetLoadRateDto dto){
+    public ResponseResult getLoadRate(GetLoadRateDto dto){
         return warehouseStatService.GetLoadRate(dto);
     }
     @GetMapping("/listWarehouseByLoadRate/{bound}")
