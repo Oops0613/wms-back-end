@@ -1,8 +1,10 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetAmountChangeDto;
 import com.lizekai.wms.domain.entity.Goods;
 import com.lizekai.wms.service.GoodsService;
+import com.lizekai.wms.service.GoodsStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private GoodsStatService goodsStatService;
 
     @GetMapping("/list")
     public ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize){
@@ -35,5 +39,17 @@ public class GoodsController {
     @GetMapping("/{id}")
     public ResponseResult getGoodsById(@PathVariable("id") Long id){
         return goodsService.getGoodsById(id);
+    }
+    @GetMapping("/getAmountChange")
+    public ResponseResult getAmountChange(GetAmountChangeDto dto){
+        return goodsStatService.getAmountChange(dto);
+    }
+    @GetMapping("/getWarningList")
+    public ResponseResult getWarningList(){
+        return goodsStatService.getWarningList();
+    }
+    @GetMapping("/getGoodsDistribution/{id}")
+    public ResponseResult getGoodsDistribution(@PathVariable("id") Long id){
+        return goodsStatService.getGoodsDistribution(id);
     }
 }

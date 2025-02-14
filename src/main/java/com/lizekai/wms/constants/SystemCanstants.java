@@ -71,4 +71,8 @@ public class SystemCanstants {
      * 仓库负载纵坐标单位：使用率
      */
     public static final String LOAD_RATE="0";
+    /**
+     * 过期预警的阈值（剩几天过期）
+     */
+    public static final int DAYS_TO_EXPIRE=3;
 }
