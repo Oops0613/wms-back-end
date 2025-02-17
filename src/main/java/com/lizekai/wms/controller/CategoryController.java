@@ -17,6 +17,10 @@ public class CategoryController {
     public ResponseResult getCategoryList(Category category){
         return categoryService.getCategoryList(category);
     }
+    @GetMapping("/listAvailableCategory")
+    public ResponseResult getAvailableCategoryList(){
+        return categoryService.getAvailableCategoryList();
+    }
     @PostMapping
     public ResponseResult addCategory(@RequestBody Category category){
         return categoryService.addCategory(category);

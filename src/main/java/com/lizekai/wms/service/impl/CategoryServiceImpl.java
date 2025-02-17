@@ -25,6 +25,8 @@ import java.util.Objects;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private CategoryMapper categoryMapper;
     @Override
     public ResponseResult getCategoryList(Category category) {
         LambdaQueryWrapper<Category> wrapper=new LambdaQueryWrapper<>();
@@ -70,6 +72,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         removeById(id);
         return ResponseResult.okResult();
     }
+
+    @Override
+    public ResponseResult getAvailableCategoryList() {
+        List<Category> categoryList=categoryMapper.listAvailableCategory();
+        return ResponseResult.okResult(categoryList);
+    }
+
     private boolean hasChildren(Long id){
         LambdaQueryWrapper<Category> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(Category::getParentId,id);
