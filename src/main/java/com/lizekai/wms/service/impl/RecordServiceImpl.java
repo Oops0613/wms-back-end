@@ -45,13 +45,13 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private InventoryService inventoryService;
     @Override
     public void refreshVolume(){
-        List<Record> recordList = list();
-        recordList.forEach(record -> {
-            Long goodsId=record.getGoodsId();
+        List<Inventory> inventoryList = inventoryService.list();
+        inventoryList.forEach(item -> {
+            Long goodsId=item.getGoodsId();
             Goods goods=goodsService.getById(goodsId);
-            double volume=goods.getVolumePerUnit()*record.getAmount();
-            record.setVolume(volume);
-            updateById(record);
+            double volume=goods.getVolumePerUnit()*item.getAmount();
+            item.setVolume(volume);
+            inventoryService.updateById(item);
         });
     }
 
@@ -188,9 +188,6 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             if(inventory.getAmount()<record.getAmount()){
                 throw new SystemException(AppHttpCodeEnum.INVENTORY_INSUFFICIENT);
             }
-            //更改库存数量
-            inventory.setAmount(inventory.getAmount()-record.getAmount());
-            inventoryService.updateById(inventory);
             //更新仓库剩余容量
             Goods goods = goodsService.getById(record.getGoodsId());
             Warehouse warehouse = warehouseService.getById(record.getFromId());
@@ -198,6 +195,10 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             double volume=goods.getVolumePerUnit() * record.getAmount();
             warehouse.setRemainingCapacity(remainingCapacity+volume);
             warehouseService.updateById(warehouse);
+            //更改库存数量和容量
+            inventory.setAmount(inventory.getAmount()-record.getAmount());
+            inventory.setVolume(inventory.getVolume()-volume);
+            inventoryService.updateById(inventory);
             //更新库存总数
             goods.setAmount(goods.getAmount()-record.getAmount());
             goodsService.updateById(goods);
@@ -215,8 +216,9 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             if(inventory.getAmount()<record.getAmount()){
                 throw new SystemException(AppHttpCodeEnum.INVENTORY_INSUFFICIENT);
             }
-            //更改旧库存数量
+            //更改旧库存数量和容量
             inventory.setAmount(inventory.getAmount()-record.getAmount());
+            inventory.setVolume(inventory.getVolume()-volume);
             inventoryService.updateById(inventory);
             //增加一笔新的库存
             Inventory newInventory=new Inventory();
