@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@Service("GoodsStatService")
+@Service("goodsStatService")
 public class GoodsStatServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsStatService {
     @Autowired
     private RecordService recordService;

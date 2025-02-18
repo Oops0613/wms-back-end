@@ -75,4 +75,8 @@ public class SystemCanstants {
      * 过期预警的阈值（剩几天过期）
      */
     public static final int DAYS_TO_EXPIRE=3;
+    /**
+     * 展示图表时精确到二级分类
+     */
+    public static final String IS_PRECISE="1";
 }

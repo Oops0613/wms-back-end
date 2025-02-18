@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service("WarehouseStatService")
+@Service("warehouseStatService")
 public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse> implements WarehouseStatService {
     @Autowired
     private WarehouseMapper warehouseMapper;

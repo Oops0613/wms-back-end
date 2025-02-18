@@ -1,8 +1,11 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetSalesCompositionDto;
+import com.lizekai.wms.domain.dto.GetWarehouseCompositionDto;
 import com.lizekai.wms.domain.entity.Category;
 import com.lizekai.wms.service.CategoryService;
+import com.lizekai.wms.service.CategoryStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +15,8 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CategoryStatService categoryStatService;
 
     @GetMapping("/list")
     public ResponseResult getCategoryList(Category category){
@@ -36,5 +41,13 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseResult getCategoryById(@PathVariable("id") Long id){
         return categoryService.getCategoryById(id);
+    }
+    @GetMapping("/getWarehouseComposition")
+    public ResponseResult getWarehouseComposition(GetWarehouseCompositionDto dto){
+        return categoryStatService.getWarehouseComposition(dto);
+    }
+    @GetMapping("/getSalesComposition")
+    public ResponseResult getSalesComposition(GetSalesCompositionDto dto){
+        return categoryStatService.getSalesComposition(dto);
     }
 }
