@@ -1,6 +1,7 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetWorkLoadDto;
 import com.lizekai.wms.domain.entity.LoginUser;
 import com.lizekai.wms.domain.entity.Menu;
 import com.lizekai.wms.domain.entity.User;
@@ -10,6 +11,7 @@ import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.service.MenuService;
 import com.lizekai.wms.service.SystemLoginService;
 import com.lizekai.wms.service.UserService;
+import com.lizekai.wms.service.UserStatService;
 import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -26,6 +28,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private SystemLoginService systemLoginService;
+    @Autowired
+    private UserStatService userStatService;
 
     //--------------------------------查询用户列表-------------------------------------
 
@@ -99,5 +103,9 @@ public class UserController {
         List<Menu> menus = menuService.selectRouterMenuTreeByUserId(userId);
 
         return ResponseResult.okResult(new RoutersVo(menus));
+    }
+    @GetMapping("/getWorkLoad")
+    public ResponseResult getWorkLoad(GetWorkLoadDto dto){
+        return userStatService.getWorkLoad(dto);
     }
 }

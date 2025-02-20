@@ -79,4 +79,13 @@ public class SystemCanstants {
      * 展示图表时精确到二级分类
      */
     public static final String IS_PRECISE="1";
+    /**
+     * 角色类别-库存管理员
+     */
+    public static final Long ROLE_INVENTORY=4L;
+    /**
+     * 角色类别-审批员
+     */
+    public static final Long ROLE_APPROVE=5L;
+
 }

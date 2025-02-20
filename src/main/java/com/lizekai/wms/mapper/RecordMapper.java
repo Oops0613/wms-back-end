@@ -3,6 +3,7 @@ package com.lizekai.wms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.lizekai.wms.domain.entity.Record;
 import com.lizekai.wms.domain.vo.SalesCompositionVo;
+import com.lizekai.wms.domain.vo.WorkLoadVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -38,4 +39,30 @@ public interface RecordMapper extends BaseMapper<Record> {
             " GROUP BY category_id,category_name " +
             "</script>")
     List<SalesCompositionVo> getPreciseSalesComposition(Long days);
+    @Select("<script>" +
+            " SELECT u.id, u.real_name AS real_name , COUNT(*) AS amount " +
+            " FROM wms_record AS rcd " +
+            " INNER JOIN sys_user AS u ON rcd.apply_by = u.id " +
+            "<where>" +
+            " u.role_id in (1,4) " +
+            "   <if test='days > 0'>" +
+            "       AND apply_time>= CURDATE() - INTERVAL #{days} DAY " +
+            "   </if>" +
+            "</where>" +
+            " GROUP BY apply_by " +
+            "</script>")
+    List<WorkLoadVo> getApplyWorkLoad(Long days);
+    @Select("<script>" +
+            " SELECT u.id, u.real_name AS real_name , COUNT(*) AS amount " +
+            " FROM wms_record AS rcd " +
+            " INNER JOIN sys_user AS u ON rcd.approve_by = u.id " +
+            "<where>" +
+            " u.role_id in (1,5) " +
+            "   <if test='days > 0'>" +
+            "       AND approve_time>= CURDATE() - INTERVAL #{days} DAY " +
+            "   </if>" +
+            "</where>" +
+            " GROUP BY approve_by " +
+            "</script>")
+    List<WorkLoadVo> getApproveWorkLoad(Long days);
 }
