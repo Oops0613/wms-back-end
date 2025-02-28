@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 //把文件上传的接口设置为需要登录才能访问
 //                .antMatchers("/upload").authenticated()
-                // 除上面外的所有请求全部不需要认证即可访问
+                // 除上面外的所有请求全部需要认证可访问
                 .anyRequest().authenticated();
 
         http.exceptionHandling()

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Category;
 import com.lizekai.wms.domain.entity.User;
+import com.lizekai.wms.domain.entity.Warehouse;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.domain.entity.Goods;
@@ -13,7 +14,6 @@ import com.lizekai.wms.service.GoodsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,14 +26,14 @@ import java.util.Objects;
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
 
     @Override
-    public ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize) {
-        LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.hasText(goods.getName()),Goods::getName,goods.getName());
-        wrapper.eq(!Objects.isNull(goods.getCategoryId()),Goods::getCategoryId,goods.getCategoryId());
+    public ResponseResult getGoodsList(Goods goods, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(goods.getName()), Goods::getName, goods.getName());
+        wrapper.eq(!Objects.isNull(goods.getCategoryId()), Goods::getCategoryId, goods.getCategoryId());
 
-        Page<Goods> page = new Page<>(pageNum,pageSize);
-        page(page,wrapper);
-        return ResponseResult.okResult(new PageVo(page.getRecords(),page.getTotal()));
+        Page<Goods> page = new Page<>(pageNum, pageSize);
+        page(page, wrapper);
+        return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
     }
 
     @Override
@@ -55,12 +55,25 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public ResponseResult deleteGoods(Long id) {
-        Goods goods=getById(id);
-        if(!Objects.isNull(goods)&&goods.getAmount()>0){
-            return ResponseResult.errorResult(500,"该货物正在使用中，无法删除");
+        Goods goods = getById(id);
+        if (!Objects.isNull(goods) && goods.getAmount() > 0) {
+            return ResponseResult.errorResult(500, "该货物正在使用中，无法删除");
         }
         removeById(id);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public boolean hasGoodsByCategory(Long categoryId) {
+        LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Goods::getCategoryId, categoryId);
+        return count(wrapper) > 0;
+    }
+
+    @Override
+    public ResponseResult listAllGoods() {
+        LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
+        return ResponseResult.okResult(list(wrapper));
     }
 }
 

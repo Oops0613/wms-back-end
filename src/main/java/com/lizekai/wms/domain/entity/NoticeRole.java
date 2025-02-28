@@ -6,22 +6,21 @@ import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- * (UserTest)表实体类
+ * 公告和收件角色关联表(NoticeRole)表实体类
  *
  * @author makejava
- * @since 2024-11-23 10:53:40
+ * @since 2025-02-24 12:32:34
  */
 @SuppressWarnings("serial")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value="user_test")
-public class UserTest {
-
-    private Integer id;
-    private String name;
-    //删除标志（0代表未删除，1代表已删除）
-    private Integer delFlag;
+@TableName(value="wms_notice_role")
+public class NoticeRole {
+    //公告ID
+    private Long noticeId;
+    //角色ID
+    private Long roleId;
 
 }
 

@@ -5,10 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-/**
- * @author 35238
- * @date 2023/8/10 0010 10:57
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

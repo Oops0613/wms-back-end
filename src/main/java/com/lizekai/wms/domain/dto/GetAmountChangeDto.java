@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserTestDto {
-    Long pageNum;
-    Long pageSize;
-    String name;
-    String order;
+public class GetAmountChangeDto {
+    //货物id
+    private Long goodsId;
+    //时间范围（单位：天）
+    private Long days;
 }

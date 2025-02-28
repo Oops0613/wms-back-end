@@ -21,5 +21,7 @@ public interface CategoryService extends IService<Category> {
     ResponseResult getCategoryById(Long id);
 
     ResponseResult deleteCategory(Long id);
+
+    ResponseResult getAvailableCategoryList();
 }
 

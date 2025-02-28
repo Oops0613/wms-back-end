@@ -27,10 +27,14 @@ public class Goods {
     private String name;
     //所属分类id
     private Long categoryId;
+    //分类名
+    private String categoryName;
     //库存数量
     private Double amount;
     //计量单位
     private String unit;
+    //单位价格
+    private Double pricePerUnit;
     //每单位所占容积
     private Double volumePerUnit;
     //低库存阈值

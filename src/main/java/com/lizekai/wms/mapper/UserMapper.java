@@ -9,5 +9,5 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
     @Update("update sys_user set password=#{pwd} where id=#{id}")
-    public void updatePasswordById(@Param("id") Long id,@Param("pwd") String pwd);
+    void updatePasswordById(@Param("id") Long id,@Param("pwd") String pwd);
 }

@@ -1,15 +1,12 @@
 package com.lizekai.wms.controller;
 
+import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Role;
 import com.lizekai.wms.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 35238
- * @date 2023/8/10 0010 14:05
- */
 @RestController
 @RequestMapping("/role")
 public class RoleController {
@@ -22,15 +19,6 @@ public class RoleController {
     public ResponseResult list(Role role, Integer pageNum, Integer pageSize) {
         return roleService.selectRolePage(role,pageNum,pageSize);
     }
-    //-----------------------------修改角色的状态--------------------------------------
-
-//    @PutMapping("/changeStatus")
-//    public ResponseResult changeStatus(@RequestBody ChangeRoleStatusDto roleStatusDto){
-//        Role role = new Role();
-//        role.setId(roleStatusDto.getRoleId());
-//        role.setStatus(roleStatusDto.getStatus());
-//        return ResponseResult.okResult(roleService.updateById(role));
-//    }
     //-------------------------------新增角色-----------------------------------------
 
     @PostMapping
@@ -48,13 +36,16 @@ public class RoleController {
 
     @PutMapping
     public ResponseResult edit(@RequestBody Role role) {
-        roleService.updateRole(role);
-        return ResponseResult.okResult();
+        return roleService.updateRole(role);
     }
     //--------------------------------删除角色---------------------------------------
 
     @DeleteMapping("/{id}")
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
+        //不能删除超级管理员
+        if(SystemCanstants.IS_ADMIN.equals(id.toString())){
+            return ResponseResult.errorResult(500,"不能删除超级管理员");
+        }
         roleService.removeById(id);
         return ResponseResult.okResult();
     }

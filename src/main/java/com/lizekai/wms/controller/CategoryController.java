@@ -1,27 +1,30 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.GetSalesCompositionDto;
+import com.lizekai.wms.domain.dto.GetWarehouseCompositionDto;
 import com.lizekai.wms.domain.entity.Category;
 import com.lizekai.wms.service.CategoryService;
+import com.lizekai.wms.service.CategoryStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * @author 35238
- * @date 2023/7/20 0020 14:15
- */
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
     @Autowired
-    //CategoryService是我们在huanf-framework工程里面写的接口
     private CategoryService categoryService;
+    @Autowired
+    private CategoryStatService categoryStatService;
 
     @GetMapping("/list")
-    //ResponseResult是我们在huanf-framework工程里面写的实体类
     public ResponseResult getCategoryList(Category category){
         return categoryService.getCategoryList(category);
+    }
+    @GetMapping("/listAvailableCategory")
+    public ResponseResult getAvailableCategoryList(){
+        return categoryService.getAvailableCategoryList();
     }
     @PostMapping
     public ResponseResult addCategory(@RequestBody Category category){
@@ -38,5 +41,13 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseResult getCategoryById(@PathVariable("id") Long id){
         return categoryService.getCategoryById(id);
+    }
+    @GetMapping("/getWarehouseComposition")
+    public ResponseResult getWarehouseComposition(GetWarehouseCompositionDto dto){
+        return categoryStatService.getWarehouseComposition(dto);
+    }
+    @GetMapping("/getSalesComposition")
+    public ResponseResult getSalesComposition(GetSalesCompositionDto dto){
+        return categoryStatService.getSalesComposition(dto);
     }
 }

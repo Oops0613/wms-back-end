@@ -1,6 +1,5 @@
 package com.lizekai.wms.domain.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
