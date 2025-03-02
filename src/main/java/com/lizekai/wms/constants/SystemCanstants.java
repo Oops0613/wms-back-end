@@ -87,5 +87,9 @@ public class SystemCanstants {
      * 角色类别-审批员
      */
     public static final Long ROLE_APPROVE=5L;
+    /**
+     * 表示未读状态
+     */
+    public static final String IS_UNREAD="0";
 
 }
