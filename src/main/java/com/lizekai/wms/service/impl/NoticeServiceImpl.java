@@ -52,6 +52,15 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         wrapper.or().like(StringUtils.hasText(keyword), Notice::getContent, keyword);
         Page<Notice> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
+        page.getRecords().forEach(notice -> {
+            LambdaQueryWrapper<NoticeRole> wrapper2=new LambdaQueryWrapper<>();
+            wrapper2.eq(NoticeRole::getNoticeId,notice.getId());
+            List<Long> roleIds = noticeRoleService.list(wrapper2)
+                    .stream()
+                    .map(NoticeRole::getRoleId)
+                    .collect(Collectors.toList());
+            notice.setRoleList(roleIds);
+        });
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
     }
 
@@ -105,16 +114,16 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         //删除关系表
         LambdaQueryWrapper<NoticeRole> noticeRoleWrapper=new LambdaQueryWrapper<>();
         noticeRoleWrapper.eq(NoticeRole::getNoticeId,id);
+        List<Long> roleList = noticeRoleService.list(noticeRoleWrapper)
+                .stream()
+                .map(NoticeRole::getRoleId)
+                .collect(Collectors.toList());
         noticeRoleService.remove(noticeRoleWrapper);
         //删除已读状态表
         LambdaQueryWrapper<ReadStatus> readStatusWrapper=new LambdaQueryWrapper<>();
         readStatusWrapper.eq(ReadStatus::getNoticeId,id);
         readStatusService.remove(readStatusWrapper);
         //删除redis相关内容
-        List<Long> roleList = noticeRoleService.list(noticeRoleWrapper)
-                .stream()
-                .map(NoticeRole::getRoleId)
-                .collect(Collectors.toList());
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.in(User::getRoleId, roleList);
         List<Long> userIds = userService.list(userWrapper)

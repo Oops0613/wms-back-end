@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,11 @@ public class ReadStatusRunner implements CommandLineRunner {
                 .collect(Collectors.groupingBy(
                         ReadStatus::getUserId,
                         Collectors.mapping(ReadStatus::getNoticeId, Collectors.toSet())));
-
-        map.forEach((userId,noticeIds)-> redisCache.setCacheSet("WMSUnread:" + userId,noticeIds));
+        //根据前缀获取所有key并删除
+        Collection<String> keys = redisCache.keys("WMSUnread:" + "*");
+        redisCache.deleteObject(keys);
+        map.forEach((userId,noticeIds)->{
+            redisCache.setCacheSet("WMSUnread:" + userId,noticeIds);
+        });
     }
 }
