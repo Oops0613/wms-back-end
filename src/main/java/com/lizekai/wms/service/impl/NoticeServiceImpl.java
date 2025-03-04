@@ -16,6 +16,7 @@ import com.lizekai.wms.service.NoticeService;
 import com.lizekai.wms.service.ReadStatusService;
 import com.lizekai.wms.service.UserService;
 import com.lizekai.wms.utils.RedisCache;
+import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,8 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     private NoticeRoleService noticeRoleService;
     @Autowired
     private ReadStatusService readStatusService;
+    @Autowired
+    private NoticeMapper noticeMapper;
 
     @Override
     public ResponseResult getNoticeList(NoticeListDto dto, Integer pageNum, Integer pageSize) {
@@ -137,6 +140,17 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
             redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
         });
         return ResponseResult.okResult();
+    }
+
+    /**
+     * 获取该用户信箱里最新的一条公告
+     * @return
+     */
+    @Override
+    public ResponseResult getLatestNotice() {
+        User user = SecurityUtils.getLoginUser().getUser();
+        List<Notice> notice = noticeMapper.getLatestNotice(user.getRoleId());
+        return ResponseResult.okResult(notice);
     }
 }
 

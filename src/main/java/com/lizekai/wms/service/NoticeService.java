@@ -22,5 +22,7 @@ public interface NoticeService extends IService<Notice> {
     ResponseResult updateNotice(Notice notice);
 
     ResponseResult removeNotice(Long id);
+
+    ResponseResult getLatestNotice();
 }
 

@@ -33,4 +33,8 @@ public class NoticeController {
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
         return noticeService.removeNotice(id);
     }
+    @GetMapping("/getLatestNotice")
+    public ResponseResult getLatestNotice(){
+        return noticeService.getLatestNotice();
+    }
 }

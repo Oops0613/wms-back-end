@@ -45,14 +45,22 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     private InventoryService inventoryService;
     @Override
     public void refreshVolume(){
-        List<Inventory> inventoryList = inventoryService.list();
-        inventoryList.forEach(item -> {
-            Long goodsId=item.getGoodsId();
+        List<Record> recordList=list();
+        recordList.forEach(record -> {
+            Long goodsId=record.getGoodsId();
             Goods goods=goodsService.getById(goodsId);
-            double volume=goods.getVolumePerUnit()*item.getAmount();
-            item.setVolume(volume);
-            inventoryService.updateById(item);
+            double volume=goods.getVolumePerUnit()*record.getAmount();
+            record.setVolume(volume);
+            updateById(record);
         });
+//        List<Inventory> inventoryList = inventoryService.list();
+//        inventoryList.forEach(item -> {
+//            Long goodsId=item.getGoodsId();
+//            Goods goods=goodsService.getById(goodsId);
+//            double volume=goods.getVolumePerUnit()*item.getAmount();
+//            item.setVolume(volume);
+//            inventoryService.updateById(item);
+//        });
     }
 
     @Override
@@ -391,6 +399,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             record.setExpirationTime(dto.getExpirationTime());
         }
         record.setAmount(dto.getAmount());
+        record.setVolume(dto.getAmount()*goods.getVolumePerUnit());
         record.setApplyBy(user.getId());
         record.setApplyRemark(dto.getApplyRemark());
         record.setApplyTime(new Date());
