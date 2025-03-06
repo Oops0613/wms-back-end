@@ -3,6 +3,7 @@ package com.lizekai.wms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.NoticeListDto;
 import com.lizekai.wms.domain.entity.*;
@@ -11,6 +12,7 @@ import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.NoticeMapper;
 import com.lizekai.wms.domain.entity.Notice;
+import com.lizekai.wms.mapper.ReadStatusMapper;
 import com.lizekai.wms.service.NoticeRoleService;
 import com.lizekai.wms.service.NoticeService;
 import com.lizekai.wms.service.ReadStatusService;
@@ -46,6 +48,8 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     private ReadStatusService readStatusService;
     @Autowired
     private NoticeMapper noticeMapper;
+    @Autowired
+    private ReadStatusMapper readStatusMapper;
 
     @Override
     public ResponseResult getNoticeList(NoticeListDto dto, Integer pageNum, Integer pageSize) {
@@ -91,7 +95,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         noticeRoleService.saveBatch(noticeRoles);
         //更新redis未读状态
         userIds.forEach(userId->{
-            Set<Long> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
+            Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
             noticeSet.add(noticeId);
             redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
         });
@@ -151,6 +155,66 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         User user = SecurityUtils.getLoginUser().getUser();
         List<Notice> notice = noticeMapper.getLatestNotice(user.getRoleId());
         return ResponseResult.okResult(notice);
+    }
+
+    /**
+     * 分页查询该用户信箱的内容
+     * @param dto
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public ResponseResult listPersonalNotice(NoticeListDto dto, Integer pageNum, Integer pageSize) {
+        User user = SecurityUtils.getLoginUser().getUser();
+        Long userId=user.getId();
+        Long roleId=user.getRoleId();
+        String keyWord = dto.getKeyWord();
+        if(!StringUtils.hasText(keyWord)){
+            keyWord=null;
+        }
+        Page<Notice> page = new Page<>(pageNum, pageSize);
+        page = noticeMapper.listPersonalNotice(page,roleId, keyWord);
+        page.getRecords().forEach(notice -> {
+            Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
+            if(noticeSet.contains(notice.getId().toString())){
+                notice.setIsRead(SystemCanstants.IS_UNREAD);
+            }
+            else {
+                notice.setIsRead(SystemCanstants.IS_READ);
+            }
+        });
+        return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
+    }
+
+    /**
+     * 用户查看某条公告的具体内容
+     * @param noticeId
+     * @return
+     */
+    @Override
+    public ResponseResult getNoticeDetail(Long noticeId) {
+        Long userId = SecurityUtils.getUserId();
+        Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
+        //如果移除成功说明该公告未读
+        if(noticeSet.remove(noticeId.toString())){
+            //更新数据库和Redis
+            readStatusMapper.updateReadStatus(noticeId,userId);
+            redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
+        }
+        Notice notice = getById(noticeId);
+        return ResponseResult.okResult(notice);
+    }
+
+    /**
+     * 获取某用户未读公告的数量
+     * @return
+     */
+    @Override
+    public ResponseResult getUnreadAmount() {
+        Long userId = SecurityUtils.getUserId();
+        Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
+        return ResponseResult.okResult(noticeSet.size());
     }
 }
 

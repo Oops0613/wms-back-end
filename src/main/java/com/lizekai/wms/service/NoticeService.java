@@ -24,5 +24,11 @@ public interface NoticeService extends IService<Notice> {
     ResponseResult removeNotice(Long id);
 
     ResponseResult getLatestNotice();
+
+    ResponseResult listPersonalNotice(NoticeListDto dto, Integer pageNum, Integer pageSize);
+
+    ResponseResult getNoticeDetail(Long noticeId);
+
+    ResponseResult getUnreadAmount();
 }
 

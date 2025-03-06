@@ -37,4 +37,16 @@ public class NoticeController {
     public ResponseResult getLatestNotice(){
         return noticeService.getLatestNotice();
     }
+    @GetMapping("/listPersonalNotice")
+    public ResponseResult listPersonalNotice(NoticeListDto dto, Integer pageNum, Integer pageSize){
+        return noticeService.listPersonalNotice(dto,pageNum,pageSize);
+    }
+    @GetMapping("/getNoticeDetail/{noticeId}")
+    public ResponseResult getNoticeDetail(@PathVariable Long noticeId){
+        return noticeService.getNoticeDetail(noticeId);
+    }
+    @GetMapping("/getUnreadAmount")
+    public ResponseResult getUnreadAmount(){
+        return noticeService.getUnreadAmount();
+    }
 }

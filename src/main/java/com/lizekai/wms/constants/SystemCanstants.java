@@ -91,5 +91,9 @@ public class SystemCanstants {
      * 表示未读状态
      */
     public static final String IS_UNREAD="0";
+    /**
+     * 表示已读状态
+     */
+    public static final String IS_READ="1";
 
 }
