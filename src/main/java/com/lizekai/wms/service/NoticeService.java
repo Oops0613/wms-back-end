@@ -1,6 +1,8 @@
 package com.lizekai.wms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lizekai.wms.domain.ResponseResult;
+import com.lizekai.wms.domain.dto.NoticeListDto;
 import com.lizekai.wms.domain.entity.Notice;
 import org.springframework.stereotype.Service;
 
@@ -13,5 +15,20 @@ import org.springframework.stereotype.Service;
 @Service
 public interface NoticeService extends IService<Notice> {
 
+    ResponseResult getNoticeList(NoticeListDto dto, Integer pageNum, Integer pageSize);
+
+    ResponseResult insertNotice(Notice notice);
+
+    ResponseResult updateNotice(Notice notice);
+
+    ResponseResult removeNotice(Long id);
+
+    ResponseResult getLatestNotice();
+
+    ResponseResult listPersonalNotice(NoticeListDto dto, Integer pageNum, Integer pageSize);
+
+    ResponseResult getNoticeDetail(Long noticeId);
+
+    ResponseResult getUnreadAmount();
 }
 

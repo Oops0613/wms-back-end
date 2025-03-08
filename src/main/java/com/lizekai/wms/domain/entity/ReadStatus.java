@@ -17,6 +17,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @TableName(value="wms_read_status")
 public class ReadStatus {
+    public ReadStatus(Long noticeId, Long userId) {
+        this.noticeId = noticeId;
+        this.userId = userId;
+    }
+
     //主键ID
     private Long id;
     //公告ID

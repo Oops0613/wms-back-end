@@ -1,6 +1,7 @@
 package com.lizekai.wms.domain.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -40,6 +41,12 @@ public class Notice {
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     private Integer delFlag;
-
+    //表中没有的字段
+    //接收方角色
+    @TableField(exist = false)
+    private List<Long> roleList;
+    //已读状态（0未读1已读）
+    @TableField(exist = false)
+    private String isRead;
 }
 
