@@ -143,7 +143,23 @@ public class RedisCache {
         }
         return setOperation;
     }
-
+    /**
+     * 移除部分Set
+     *
+     * @param key 缓存键值
+     * @param dataSet 缓存的数据
+     * @return 缓存数据的对象
+     */
+    public <T> BoundSetOperations<String, T> removeCacheSet(final String key, final Set<T> dataSet)
+    {
+        BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
+        Iterator<T> it = dataSet.iterator();
+        while (it.hasNext())
+        {
+            setOperation.remove(it.next());
+        }
+        return setOperation;
+    }
     /**
      * 获得缓存的set
      *

@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,9 +95,9 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
                 .collect(Collectors.toList());
         noticeRoleService.saveBatch(noticeRoles);
         //更新redis未读状态
+        Set<Long> noticeSet=new HashSet<>();
+        noticeSet.add(noticeId);
         userIds.forEach(userId->{
-            Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
-            noticeSet.add(noticeId);
             redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
         });
         //更新已读状态表
@@ -137,11 +138,10 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
                 .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-
+        Set<Long> noticeSet=new HashSet<>();
+        noticeSet.add(id);
         userIds.forEach(userId-> {
-            Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
-            noticeSet.remove(id);
-            redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
+            redisCache.removeCacheSet("WMSUnread:" + userId,noticeSet);
         });
         return ResponseResult.okResult();
     }
@@ -197,10 +197,12 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         Long userId = SecurityUtils.getUserId();
         Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
         //如果移除成功说明该公告未读
-        if(noticeSet.remove(noticeId.toString())){
+        if(noticeSet.contains(noticeId.toString())){
             //更新数据库和Redis
             readStatusMapper.updateReadStatus(noticeId,userId);
-            redisCache.setCacheSet("WMSUnread:" + userId,noticeSet);
+            Set<Long> newSet=new HashSet<>();
+            newSet.add(noticeId);
+            redisCache.removeCacheSet("WMSUnread:" + userId,newSet);
         }
         Notice notice = getById(noticeId);
         return ResponseResult.okResult(notice);

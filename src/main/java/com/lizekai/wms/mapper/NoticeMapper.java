@@ -30,6 +30,7 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             "       OR content LIKE CONCAT('%', #{keyWord}, '%') ) " +
             "   </if>" +
             "</where>" +
+            " ORDER BY create_time DESC " +
             "</script>")
     Page<Notice> listPersonalNotice(Page<Notice> page, @Param("roleId")Long roleId,@Param("keyWord") String keyWord);
 }
