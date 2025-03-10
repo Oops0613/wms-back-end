@@ -1,6 +1,7 @@
 package com.lizekai.wms.domain.entity;
 
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -45,7 +46,7 @@ public class Role {
     private String remark;
     //关联菜单id数组，不是表中的字段  用来接收参数使用
     @TableField(exist = false)
-    private Long[] menuIds;
+    private List<Long> menuIds;
 
 }
 

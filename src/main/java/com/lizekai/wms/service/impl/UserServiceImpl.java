@@ -97,6 +97,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(!StringUtils.hasText(user.getRoleId().toString())){
             throw new SystemException(AppHttpCodeEnum.ROLE_NOT_NULL);
         }
+        User oldUser=getById(user.getId());
+        //如果用户名有修改，检查唯一性
+        if(!oldUser.getUserName().equals(user.getUserName())){
+            if(existUserName(user.getUserName())){
+                throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
+            }
+        }
         // 更新用户信息
         updateById(user);
         return ResponseResult.okResult();

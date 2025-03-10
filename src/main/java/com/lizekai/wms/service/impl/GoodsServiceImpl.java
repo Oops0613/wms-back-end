@@ -4,12 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.domain.ResponseResult;
-import com.lizekai.wms.domain.entity.Category;
-import com.lizekai.wms.domain.entity.User;
-import com.lizekai.wms.domain.entity.Warehouse;
-import com.lizekai.wms.domain.vo.PageVo;
-import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.domain.entity.Goods;
+import com.lizekai.wms.domain.vo.PageVo;
+import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.handler.exception.SystemException;
+import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.service.GoodsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,12 +37,21 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public ResponseResult addGoods(Goods goods) {
+        if(existGoodsName(goods.getName())){
+            throw new SystemException(AppHttpCodeEnum.GOODS_NAME_EXIST);
+        }
         save(goods);
         return ResponseResult.okResult();
     }
 
     @Override
     public ResponseResult updateGoods(Goods goods) {
+        Goods oldGoods = getById(goods.getId());
+        if(!oldGoods.getName().equals(goods.getName())){
+            if(existGoodsName(goods.getName())){
+                throw new SystemException(AppHttpCodeEnum.GOODS_NAME_EXIST);
+            }
+        }
         updateById(goods);
         return ResponseResult.okResult();
     }
@@ -74,6 +82,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public ResponseResult listAllGoods() {
         LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
         return ResponseResult.okResult(list(wrapper));
+    }
+    private boolean existGoodsName(String name){
+        LambdaQueryWrapper<Goods> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Goods::getName,name);
+        return count(wrapper)>0;
     }
 }
 

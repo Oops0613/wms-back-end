@@ -7,6 +7,7 @@ import com.lizekai.wms.constants.SystemCanstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.RoleMenu;
 import com.lizekai.wms.domain.vo.PageVo;
+import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.RoleMapper;
 import com.lizekai.wms.domain.entity.Role;
@@ -16,6 +17,7 @@ import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -71,9 +73,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     @Transactional
     public ResponseResult insertRole(Role role) {
+        if(existRoleName(role.getRoleName())){
+            throw new SystemException(AppHttpCodeEnum.ROLENAME_EXIST);
+        }
         save(role);
-        System.out.println(role.getId());
-        if(role.getMenuIds()!=null&&role.getMenuIds().length>0){
+        if(CollectionUtils.isEmpty(role.getMenuIds())){
             insertRoleMenu(role);
         }
         return ResponseResult.okResult();
@@ -84,6 +88,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         //不能修改超级管理员
         if(SystemCanstants.IS_ADMIN.equals(role.getId().toString())){
             return ResponseResult.errorResult(500,"不能修改超级管理员");
+        }
+        Role oldRole=getById(role.getId());
+        //如果角色名有修改，检查唯一性
+        if(!oldRole.getRoleName().equals(role.getRoleName())){
+            if(existRoleName(role.getRoleName())){
+                throw new SystemException(AppHttpCodeEnum.ROLENAME_EXIST);
+            }
         }
         updateById(role);
         roleMenuService.deleteRoleMenuByRoleId(role.getId());
@@ -105,10 +116,15 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     private void insertRoleMenu(Role role) {
-        List<RoleMenu> roleMenuList = Arrays.stream(role.getMenuIds())
-                .map(memuId -> new RoleMenu(role.getId(), memuId))
+        List<RoleMenu> roleMenuList = role.getMenuIds().stream()
+                .map(menuId -> new RoleMenu(role.getId(), menuId))
                 .collect(Collectors.toList());
         roleMenuService.saveBatch(roleMenuList);
+    }
+    private boolean existRoleName(String roleName){
+        LambdaQueryWrapper<Role> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Role::getRoleName,roleName);
+        return count(wrapper)>0;
     }
 }
 

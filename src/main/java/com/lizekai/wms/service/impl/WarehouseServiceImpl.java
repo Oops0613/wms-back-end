@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Warehouse;
 import com.lizekai.wms.domain.vo.PageVo;
+import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.WarehouseMapper;
 import com.lizekai.wms.service.WarehouseService;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
 
     @Override
     public ResponseResult addWarehouse(Warehouse warehouse) {
+        if(existWarehouseName(warehouse.getName())){
+            throw new SystemException(AppHttpCodeEnum.WAREHOUSE_NAME_EXIST);
+        }
         warehouse.setRemainingCapacity(warehouse.getCapacity());
         save(warehouse);
         return ResponseResult.okResult();
@@ -42,6 +47,12 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
         Warehouse old = getById(warehouse.getId());
         if (old.getRemainingCapacity() < old.getCapacity()) {
             return ResponseResult.errorResult(500, "该仓库正在使用中，无法修改");
+        }
+        Warehouse oldWarehouse = getById(warehouse.getId());
+        if(!oldWarehouse.getName().equals(warehouse.getName())){
+            if(existWarehouseName(warehouse.getName())){
+                throw new SystemException(AppHttpCodeEnum.WAREHOUSE_NAME_EXIST);
+            }
         }
         warehouse.setRemainingCapacity(warehouse.getCapacity());
         updateById(warehouse);
@@ -67,6 +78,11 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     public ResponseResult listAllWarehouse() {
         LambdaQueryWrapper<Warehouse> wrapper = new LambdaQueryWrapper<>();
         return ResponseResult.okResult(list(wrapper));
+    }
+    private boolean existWarehouseName(String name){
+        LambdaQueryWrapper<Warehouse> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(Warehouse::getName,name);
+        return count(wrapper)>0;
     }
 }
 
