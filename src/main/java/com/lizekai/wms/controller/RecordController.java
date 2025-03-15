@@ -3,12 +3,12 @@ package com.lizekai.wms.controller;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.AddApplyDto;
 import com.lizekai.wms.domain.dto.ApproveDto;
-import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.lizekai.wms.domain.dto.RecordListDto;
-import com.lizekai.wms.domain.entity.Goods;
 import com.lizekai.wms.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/record")
@@ -62,5 +62,10 @@ public class RecordController {
     @PostMapping("preApprove")
     public ResponseResult preApprove(){
         return recordService.preApprove();
+    }
+    @GetMapping("/export")
+    //注意返回值类型是void
+    public void export(HttpServletResponse response){
+        recordService.export(response);
     }
 }
