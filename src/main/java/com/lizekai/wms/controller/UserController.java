@@ -79,17 +79,13 @@ public class UserController {
     @GetMapping("/getInfo")
     public ResponseResult getInfo(){
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        //TODO@用户信息包括权限信息
-        //Long userId=loginUser.getUser().getId();
-
-        //List<String> perms = menuService.selectPermsByUserId(userId);
-
+        // 用户信息包括权限信息
+        Long userId=loginUser.getUser().getId();
+        List<String> perms = menuService.selectPermsByUserId(userId);
+        loginUser.setPermissions(perms);
         //List<String> roleKeyList=roleService.selectRoleKeyByUserId(userId);
-
         //UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
-
         //AdminUserInfoVo adminUserInfoVo = new AdminUserInfoVo(perms, roleKeyList, userInfoVo);
-
         return ResponseResult.okResult(loginUser);
     }
     @PostMapping("/logout")

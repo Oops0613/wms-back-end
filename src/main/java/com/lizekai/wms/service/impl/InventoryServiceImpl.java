@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.alibaba.excel.EasyExcel;
@@ -47,7 +47,7 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
         wrapper.eq(Objects.nonNull(dto.getCategoryId()),Inventory::getCategoryId,dto.getCategoryId());
         wrapper.like(StringUtils.hasText(dto.getGoodsName()),Inventory::getGoodsName,dto.getGoodsName());
         //需要忽略为0的库存
-        if(SystemCanstants.IGNORE_ZERO.equals(dto.getIgnoreZero())){
+        if(SystemConstants.IGNORE_ZERO.equals(dto.getIgnoreZero())){
             wrapper.gt(Inventory::getAmount,0);
         }
         Page<Inventory> page = new Page<>(pageNum, pageSize);
@@ -70,7 +70,7 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
             excelInventoryVos.forEach(item->{
                 item.setCreateByName(userMap.get(item.getCreateBy()));
                 item.setUpdateByName(userMap.get(item.getUpdateBy()));
-                if(!SystemCanstants.CAN_EXPIRE.equals(item.getHasExpirationTime())){
+                if(!SystemConstants.CAN_EXPIRE.equals(item.getHasExpirationTime())){
                     item.setExpirationTime(null);
                 }
             });

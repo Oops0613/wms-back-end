@@ -2,7 +2,7 @@ package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
@@ -71,7 +71,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category category=getById(id);
         String pid=category.getParentId().toString();
         //要删除的是一级分类
-        if(SystemCanstants.CATEGORY_ROOT.equals(pid)){
+        if(SystemConstants.CATEGORY_ROOT.equals(pid)){
             if(hasChildren(id)){
                 return ResponseResult.errorResult(500,"该分类下有子分类，不能删除");
             }

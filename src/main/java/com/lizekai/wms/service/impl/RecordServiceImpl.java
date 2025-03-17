@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.AddApplyDto;
 import com.lizekai.wms.domain.dto.ApproveDto;
@@ -76,18 +76,18 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     public ResponseResult getInApplyList(RecordListDto dto, Integer pageNum, Integer pageSize) {
-        return getApplyListByType(dto, pageNum, pageSize, SystemCanstants.IN_APPLY);
+        return getApplyListByType(dto, pageNum, pageSize, SystemConstants.IN_APPLY);
     }
 
     @Override
     public ResponseResult getOutApplyList(RecordListDto dto, Integer pageNum, Integer pageSize) {
-        return getApplyListByType(dto, pageNum, pageSize, SystemCanstants.OUT_APPLY);
+        return getApplyListByType(dto, pageNum, pageSize, SystemConstants.OUT_APPLY);
     }
 
 
     @Override
     public ResponseResult getAllotApplyList(RecordListDto dto, Integer pageNum, Integer pageSize) {
-        return getApplyListByType(dto, pageNum, pageSize, SystemCanstants.ALLOT_APPLY);
+        return getApplyListByType(dto, pageNum, pageSize, SystemConstants.ALLOT_APPLY);
     }
 
     /**
@@ -103,13 +103,13 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Long categoryId = dto.getCategoryId();
         String goodsName = dto.getGoodsName();
         String approveStatus = dto.getApproveStatus();
-        wrapper.eq(Objects.nonNull(fromId) && !SystemCanstants.IN_APPLY.equals(type), Record::getFromId, fromId);
-        wrapper.eq(Objects.nonNull(toId) && !SystemCanstants.OUT_APPLY.equals(type), Record::getToId, toId);
-        if (SystemCanstants.IN_APPLY.equals(type)) {
+        wrapper.eq(Objects.nonNull(fromId) && !SystemConstants.IN_APPLY.equals(type), Record::getFromId, fromId);
+        wrapper.eq(Objects.nonNull(toId) && !SystemConstants.OUT_APPLY.equals(type), Record::getToId, toId);
+        if (SystemConstants.IN_APPLY.equals(type)) {
             wrapper.eq(Record::getFromId, -1);
-        } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+        } else if (SystemConstants.OUT_APPLY.equals(type)) {
             wrapper.eq(Record::getToId, -1);
-        } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+        } else if (SystemConstants.ALLOT_APPLY.equals(type)) {
             wrapper.gt(Record::getFromId, 0);
             wrapper.gt(Record::getToId, 0);
         }
@@ -143,17 +143,17 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     public ResponseResult addInApply(AddApplyDto dto) {
-        return addApplyByType(dto, SystemCanstants.IN_APPLY);
+        return addApplyByType(dto, SystemConstants.IN_APPLY);
     }
 
     @Override
     public ResponseResult addOutApply(AddApplyDto dto) {
-        return addApplyByType(dto, SystemCanstants.OUT_APPLY);
+        return addApplyByType(dto, SystemConstants.OUT_APPLY);
     }
 
     @Override
     public ResponseResult addAllotApply(AddApplyDto dto) {
-        return addApplyByType(dto, SystemCanstants.ALLOT_APPLY);
+        return addApplyByType(dto, SystemConstants.ALLOT_APPLY);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         String type = dto.getType();
         Inventory inventory = new Inventory();
         Record record = getById(dto.getId());
-        if (SystemCanstants.IN_APPLY.equals(type)) {
+        if (SystemConstants.IN_APPLY.equals(type)) {
             Warehouse warehouse = warehouseService.getById(record.getToId());
             Double remainingCapacity = warehouse.getRemainingCapacity();
             Goods goods = goodsService.getById(record.getGoodsId());
@@ -172,7 +172,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
                 throw new SystemException(AppHttpCodeEnum.OUT_OF_CAPACITY);
             }
             //检查入库货物是否过期
-            if (SystemCanstants.CAN_EXPIRE.equals(record.getHasExpirationTime())
+            if (SystemConstants.CAN_EXPIRE.equals(record.getHasExpirationTime())
                     && record.getExpirationTime().before(new Date())) {
                 throw new SystemException(AppHttpCodeEnum.GOODS_EXPIRED);
             }
@@ -196,7 +196,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             //更新库存总数
             goods.setAmount(goods.getAmount() + record.getAmount());
             goodsService.updateById(goods);
-        } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+        } else if (SystemConstants.OUT_APPLY.equals(type)) {
             //检查该笔库存数量是否足够
             inventory = inventoryService.getById(record.getInventoryId());
             if (inventory.getAmount() < record.getAmount()) {
@@ -216,7 +216,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             //更新库存总数
             goods.setAmount(goods.getAmount() - record.getAmount());
             goodsService.updateById(goods);
-        } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+        } else if (SystemConstants.ALLOT_APPLY.equals(type)) {
             //检查目的仓库剩余容量是否足够
             Warehouse warehouse = warehouseService.getById(record.getToId());
             Double remainingCapacity = warehouse.getRemainingCapacity();
@@ -264,7 +264,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         User approveUser = SecurityUtils.getLoginUser().getUser();
         record.setApproveBy(approveUser.getId());
         record.setApproveRemark(dto.getApproveRemark());
-        record.setApproveStatus(SystemCanstants.APPROVE_PASS);
+        record.setApproveStatus(SystemConstants.APPROVE_PASS);
         record.setApproveTime(new Date());
         updateById(record);
         return ResponseResult.okResult();
@@ -276,7 +276,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         User approveUser = SecurityUtils.getLoginUser().getUser();
         record.setApproveBy(approveUser.getId());
         record.setApproveRemark(dto.getApproveRemark());
-        record.setApproveStatus(SystemCanstants.APPROVE_REJECT);
+        record.setApproveStatus(SystemConstants.APPROVE_REJECT);
         record.setApproveTime(new Date());
         updateById(record);
         return ResponseResult.okResult();
@@ -290,20 +290,20 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         //获取状态为未审批or无法审批的申请
         LambdaQueryWrapper<Record> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(Record::getApproveStatus,
-                Arrays.asList(SystemCanstants.NEED_APPROVE, SystemCanstants.APPROVE_UNAVAILABLE));
+                Arrays.asList(SystemConstants.NEED_APPROVE, SystemConstants.APPROVE_UNAVAILABLE));
         List<Record> recordList = list(wrapper);
         //遍历列表，检查条件
         recordList.forEach(record -> {
             boolean valid = checkStatus(record);
             String oldStatus = record.getApproveStatus();
             //未审批->无法审批
-            if (SystemCanstants.NEED_APPROVE.equals(oldStatus) && !valid) {
-                record.setApproveStatus(SystemCanstants.APPROVE_UNAVAILABLE);
+            if (SystemConstants.NEED_APPROVE.equals(oldStatus) && !valid) {
+                record.setApproveStatus(SystemConstants.APPROVE_UNAVAILABLE);
                 updateById(record);
             }
             //无法审批->未审批
-            if (SystemCanstants.APPROVE_UNAVAILABLE.equals(oldStatus) && valid) {
-                record.setApproveStatus(SystemCanstants.NEED_APPROVE);
+            if (SystemConstants.APPROVE_UNAVAILABLE.equals(oldStatus) && valid) {
+                record.setApproveStatus(SystemConstants.NEED_APPROVE);
                 updateById(record);
             }
         });
@@ -325,7 +325,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             excelRecordVos.forEach(item -> {
                 item.setApplyByName(userMap.get(item.getApplyBy()));
                 item.setApproveByName(userMap.get(item.getApproveBy()));
-                if (!SystemCanstants.CAN_EXPIRE.equals(item.getHasExpirationTime())) {
+                if (!SystemConstants.CAN_EXPIRE.equals(item.getHasExpirationTime())) {
                     item.setExpirationTime(null);
                 }
                 if(item.getFromId()<0){
@@ -336,22 +336,22 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
                 }
                 //填充申请类型字段
                 String type = item.getType();
-                if (SystemCanstants.IN_APPLY.equals(type)) {
+                if (SystemConstants.IN_APPLY.equals(type)) {
                     item.setTypeName("入库申请");
-                } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+                } else if (SystemConstants.OUT_APPLY.equals(type)) {
                     item.setTypeName("出库申请");
-                } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+                } else if (SystemConstants.ALLOT_APPLY.equals(type)) {
                     item.setTypeName("调拨申请");
                 }
                 //填充审批状态字段
                 String status = item.getApproveStatus();
-                if (SystemCanstants.NEED_APPROVE.equals(status)) {
+                if (SystemConstants.NEED_APPROVE.equals(status)) {
                     item.setApproveStatusName("未审批");
-                } else if (SystemCanstants.APPROVE_PASS.equals(status)) {
+                } else if (SystemConstants.APPROVE_PASS.equals(status)) {
                     item.setApproveStatusName("审批通过");
-                } else if (SystemCanstants.APPROVE_REJECT.equals(status)) {
+                } else if (SystemConstants.APPROVE_REJECT.equals(status)) {
                     item.setApproveStatusName("审批驳回");
-                } else if (SystemCanstants.APPROVE_UNAVAILABLE.equals(status)) {
+                } else if (SystemConstants.APPROVE_UNAVAILABLE.equals(status)) {
                     item.setApproveStatusName("无法审批");
                 }
             });
@@ -376,26 +376,26 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
      */
     private boolean checkStatus(Record record) {
         String type = record.getType();
-        if (SystemCanstants.IN_APPLY.equals(type)) {
+        if (SystemConstants.IN_APPLY.equals(type)) {
             //检查目的仓库剩余容量是否足够
             if (!checkRemainingCapacity(record)) {
                 record.setApproveRemark("目的仓库剩余容量不足");
                 return false;
             }
             //检查入库货物是否过期
-            if (SystemCanstants.CAN_EXPIRE.equals(record.getHasExpirationTime())
+            if (SystemConstants.CAN_EXPIRE.equals(record.getHasExpirationTime())
                     && record.getExpirationTime().before(new Date())) {
                 record.setApproveRemark("入库货物过期");
                 return false;
             }
-        } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+        } else if (SystemConstants.OUT_APPLY.equals(type)) {
             //检查该笔库存数量是否足够
             Inventory inventory = inventoryService.getById(record.getInventoryId());
             if (inventory.getAmount() < record.getAmount()) {
                 record.setApproveRemark("该笔库存数量不足");
                 return false;
             }
-        } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+        } else if (SystemConstants.ALLOT_APPLY.equals(type)) {
             //检查目的仓库剩余容量是否足够
             if (!checkRemainingCapacity(record)) {
                 record.setApproveRemark("目的仓库剩余容量不足");
@@ -437,16 +437,16 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         Warehouse fromWarehouse = warehouseService.getById(dto.getFromId());
         Warehouse toWarehouse = warehouseService.getById(dto.getToId());
         Record record = new Record();
-        if (SystemCanstants.IN_APPLY.equals(type)) {
+        if (SystemConstants.IN_APPLY.equals(type)) {
             record.setFromId(-1L);
             record.setToId(toWarehouse.getId());
             record.setToName(toWarehouse.getName());
-        } else if (SystemCanstants.OUT_APPLY.equals(type)) {
+        } else if (SystemConstants.OUT_APPLY.equals(type)) {
             record.setFromId(fromWarehouse.getId());
             record.setFromName(fromWarehouse.getName());
             record.setToId(-1L);
             record.setInventoryId(dto.getInventoryId());
-        } else if (SystemCanstants.ALLOT_APPLY.equals(type)) {
+        } else if (SystemConstants.ALLOT_APPLY.equals(type)) {
             record.setFromId(fromWarehouse.getId());
             record.setFromName(fromWarehouse.getName());
             record.setToId(toWarehouse.getId());
@@ -462,7 +462,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         record.setGoodsName(goods.getName());
         record.setHasExpirationTime(goods.getHasExpirationTime());
         //货物有过期时间
-        if (SystemCanstants.CAN_EXPIRE.equals(goods.getHasExpirationTime())) {
+        if (SystemConstants.CAN_EXPIRE.equals(goods.getHasExpirationTime())) {
             record.setExpirationTime(dto.getExpirationTime());
         }
         record.setAmount(dto.getAmount());

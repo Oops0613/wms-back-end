@@ -1,12 +1,10 @@
 package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
-import com.lizekai.wms.domain.entity.Role;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
@@ -71,12 +69,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
         }
         //新增时自动填充初始密码
-        user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
+        user.setPassword(passwordEncoder.encode(SystemConstants.ORIGINAL_PASSWORD));
         save(user);
-//TODO@用户角色
-//        if(!ArrayUtils.isEmpty(user.getRoleIds())){
-//            insertUserRole(user);
-//        }
         return ResponseResult.okResult();
     }
 
@@ -129,7 +123,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public ResponseResult resetPassword(Long userId) {
         User user=getById(userId);
-        user.setPassword(passwordEncoder.encode(SystemCanstants.ORIGINAL_PASSWORD));
+        user.setPassword(passwordEncoder.encode(SystemConstants.ORIGINAL_PASSWORD));
         updateById(user);
         return ResponseResult.okResult();
     }

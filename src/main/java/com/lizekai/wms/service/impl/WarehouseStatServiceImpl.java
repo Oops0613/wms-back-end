@@ -2,7 +2,7 @@ package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.GetLoadRateDto;
 import com.lizekai.wms.domain.entity.Record;
@@ -43,7 +43,7 @@ public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Wareh
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getToId, dto.getWarehouseId())
-                .eq(Record::getApproveStatus, SystemCanstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
         List<Record> inList = recordService.list(wrapper);
         inList.forEach(record -> {
             //日期取整，用于计算日期差
@@ -58,7 +58,7 @@ public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Wareh
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getFromId, dto.getWarehouseId())
-                .eq(Record::getApproveStatus, SystemCanstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
         List<Record> outList = recordService.list(wrapper);
         outList.forEach(record -> {
             //日期取整，用于计算日期差
@@ -77,7 +77,7 @@ public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Wareh
         }
         double maxCapacity = warehouse.getCapacity();
         List<Double> resultList;
-        if (SystemCanstants.LOAD_RATE.equals(dto.getType())) {
+        if (SystemConstants.LOAD_RATE.equals(dto.getType())) {
             resultList = volumeList.stream()
                     .map(v -> 1 - v / maxCapacity)
                     .collect(Collectors.toList());

@@ -3,7 +3,7 @@ package com.lizekai.wms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.RoleMenu;
 import com.lizekai.wms.domain.vo.PageVo;
@@ -21,7 +21,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -86,7 +85,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResponseResult updateRole(Role role) {
         //不能修改超级管理员
-        if(SystemCanstants.IS_ADMIN.equals(role.getId().toString())){
+        if(SystemConstants.IS_ADMIN.equals(role.getId().toString())){
             return ResponseResult.errorResult(500,"不能修改超级管理员");
         }
         Role oldRole=getById(role.getId());
@@ -105,7 +104,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<Role> selectRoleAll() {
         LambdaQueryWrapper<Role> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Role::getStatus, SystemCanstants.STATUS_NORMAL);
+        wrapper.eq(Role::getStatus, SystemConstants.STATUS_NORMAL);
         return list(wrapper);
     }
 

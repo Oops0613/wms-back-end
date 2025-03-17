@@ -3,7 +3,7 @@ package com.lizekai.wms.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.NoticeListDto;
 import com.lizekai.wms.domain.entity.*;
@@ -178,10 +178,10 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         page.getRecords().forEach(notice -> {
             Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
             if(noticeSet.contains(notice.getId().toString())){
-                notice.setIsRead(SystemCanstants.IS_UNREAD);
+                notice.setIsRead(SystemConstants.IS_UNREAD);
             }
             else {
-                notice.setIsRead(SystemCanstants.IS_READ);
+                notice.setIsRead(SystemConstants.IS_READ);
             }
         });
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));

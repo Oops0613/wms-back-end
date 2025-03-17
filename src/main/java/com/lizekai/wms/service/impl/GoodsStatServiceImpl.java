@@ -2,7 +2,7 @@ package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.GetAmountChangeDto;
 import com.lizekai.wms.domain.entity.Goods;
@@ -55,17 +55,17 @@ public class GoodsStatServiceImpl extends ServiceImpl<GoodsMapper, Goods> implem
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getGoodsId, dto.getGoodsId())
-                .eq(Record::getApproveStatus, SystemCanstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
         List<Record> recordList = recordService.list(wrapper);//该货物的出入库记录
         recordList.forEach(record -> {
             //日期取整，用于计算日期差
             LocalDate fromDay = record.getApproveTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate today = LocalDate.now();
             int gap = (int) ChronoUnit.DAYS.between(fromDay, today);
-            if(SystemCanstants.IN_APPLY.equals(record.getType())){
+            if(SystemConstants.IN_APPLY.equals(record.getType())){
                 inAmount.set(days-gap,record.getAmount());
             }
-            else if(SystemCanstants.OUT_APPLY.equals(record.getType())){
+            else if(SystemConstants.OUT_APPLY.equals(record.getType())){
                 outAmount.set(days-gap,record.getAmount());
             }
         });
@@ -89,9 +89,9 @@ public class GoodsStatServiceImpl extends ServiceImpl<GoodsMapper, Goods> implem
         List<Goods> lowList=goodsMapper.listInsufficientGoods();
         List<Goods> highList=goodsMapper.listSurplusGoods();
         LambdaQueryWrapper<Inventory> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(Inventory::getHasExpirationTime,SystemCanstants.CAN_EXPIRE);
+        wrapper.eq(Inventory::getHasExpirationTime, SystemConstants.CAN_EXPIRE);
         // 当前时间加上三天（过期预警的标准线）
-        LocalDateTime deadline = LocalDateTime.now().plusDays(SystemCanstants.DAYS_TO_EXPIRE);
+        LocalDateTime deadline = LocalDateTime.now().plusDays(SystemConstants.DAYS_TO_EXPIRE);
         wrapper.le(Inventory::getExpirationTime,deadline);
         List<Inventory> expiredList=inventoryService.list(wrapper);
         GoodsWarningListVo vo=new GoodsWarningListVo(lowList,highList,expiredList);
