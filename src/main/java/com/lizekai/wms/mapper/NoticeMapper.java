@@ -18,7 +18,7 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             " ORDER BY create_time DESC " +
             " LIMIT 1 ")
     List<Notice> getLatestNotice(Long roleId);
-
+    @Deprecated
     @Select("<script>" +
             " SELECT * FROM " +
             " wms_notice AS n INNER JOIN wms_notice_role AS nr " +
@@ -33,4 +33,22 @@ public interface NoticeMapper extends BaseMapper<Notice> {
             " ORDER BY create_time DESC " +
             "</script>")
     Page<Notice> listPersonalNotice(Page<Notice> page, @Param("roleId")Long roleId,@Param("keyWord") String keyWord);
+
+    @Select("<script>" +
+            " SELECT * FROM " +
+            " wms_notice AS n INNER JOIN wms_read_status AS rs " +
+            " ON n.id=rs.notice_id " +
+            "<where>" +
+            " user_id=#{userId} " +
+            "   <if test='isRead!=null'>" +
+            "       AND is_read=#{isRead} " +
+            "   </if>" +
+            "   <if test='keyWord!=null'>" +
+            "       AND ( title LIKE CONCAT('%', #{keyWord}, '%') " +
+            "       OR content LIKE CONCAT('%', #{keyWord}, '%') ) " +
+            "   </if>" +
+            "</where>" +
+            " ORDER BY create_time DESC " +
+            "</script>")
+    Page<Notice> listPersonalNoticeByStatus(Page<Notice> page, @Param("userId")Long userId,@Param("keyWord") String keyWord,@Param("isRead") String isRead);
 }

@@ -168,22 +168,16 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
     public ResponseResult listPersonalNotice(NoticeListDto dto, Integer pageNum, Integer pageSize) {
         User user = SecurityUtils.getLoginUser().getUser();
         Long userId=user.getId();
-        Long roleId=user.getRoleId();
+        String isRead=null;
+        if(SystemConstants.IS_UNREAD.equals(dto.getUnread())){
+            isRead="0";
+        }
         String keyWord = dto.getKeyWord();
         if(!StringUtils.hasText(keyWord)){
             keyWord=null;
         }
         Page<Notice> page = new Page<>(pageNum, pageSize);
-        page = noticeMapper.listPersonalNotice(page,roleId, keyWord);
-        page.getRecords().forEach(notice -> {
-            Set<Object> noticeSet = redisCache.getCacheSet("WMSUnread:" + userId);
-            if(noticeSet.contains(notice.getId().toString())){
-                notice.setIsRead(SystemConstants.IS_UNREAD);
-            }
-            else {
-                notice.setIsRead(SystemConstants.IS_READ);
-            }
-        });
+        page=noticeMapper.listPersonalNoticeByStatus(page,userId,keyWord,isRead);
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
     }
 
