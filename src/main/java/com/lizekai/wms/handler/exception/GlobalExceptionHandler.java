@@ -28,7 +28,8 @@ public class GlobalExceptionHandler {
     // 处理SpringSecurity的权限异常
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseResult handleAccessDeniedException(AccessDeniedException e) {
-        return ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH.getCode(),e.getMessage());//枚举值是500
+        log.error("出现了异常! {}",e);
+        return ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH);
     }
 
     //其它异常交给这里处理
