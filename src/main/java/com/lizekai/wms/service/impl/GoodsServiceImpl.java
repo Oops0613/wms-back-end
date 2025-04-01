@@ -9,7 +9,10 @@ import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.GoodsMapper;
+import com.lizekai.wms.service.GoodsMonitorService;
 import com.lizekai.wms.service.GoodsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +26,9 @@ import java.util.Objects;
  */
 @Service("goodsService")
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
-
+    @Autowired
+    @Lazy
+    private GoodsMonitorService goodsMonitorService;
     @Override
     public ResponseResult getGoodsList(Goods goods, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
@@ -32,6 +37,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
         Page<Goods> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
+        page.getRecords().forEach(item->{
+            Long goodsId=item.getId();
+            String status = goodsMonitorService.getMonitorStatus(goodsId);
+            item.setMonitorStatus(status);
+        });
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
     }
 

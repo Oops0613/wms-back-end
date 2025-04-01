@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class PreApproveApply {
     @Autowired
     private RecordService recordService;
-    @Scheduled(cron= "0/30 * * * * ?")//30s执行一次
+    //@Scheduled(cron= "0/30 * * * * ?")//30s执行一次
     public void preApprove(){
         //由于定时任务是独立的线程，无法获取当前上下文的用户信息
         //需要另外创建一个临时的Authentication

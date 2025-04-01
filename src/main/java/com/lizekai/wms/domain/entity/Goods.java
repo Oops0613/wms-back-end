@@ -59,5 +59,7 @@ public class Goods {
     //过期适用标志（0无1有）
     private String hasExpirationTime;
 
+    @TableField(exist = false)
+    private String monitorStatus;
 }
 
