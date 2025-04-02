@@ -1,7 +1,7 @@
 package com.lizekai.wms.runner;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.entity.ReadStatus;
 import com.lizekai.wms.service.ReadStatusService;
 import com.lizekai.wms.utils.RedisCache;
@@ -27,7 +27,7 @@ public class ReadStatusRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         LambdaQueryWrapper<ReadStatus> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(ReadStatus::getIsRead, SystemCanstants.IS_UNREAD);
+        wrapper.eq(ReadStatus::getIsRead, SystemConstants.IS_UNREAD);
         List<ReadStatus> readStatusList = readStatusService.list(wrapper);
         //将未读记录整理成map
         //key=userId value=noticeId的集合

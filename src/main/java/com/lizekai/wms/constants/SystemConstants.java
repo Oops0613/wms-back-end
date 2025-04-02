@@ -1,9 +1,9 @@
 package com.lizekai.wms.constants;
 
 //字面值(代码中的固定值)处理，把字面值都在这里定义成常量
-public class SystemCanstants {
+public class SystemConstants {
     /**
-     * 分类表的分类状态是正常状态
+     * 正常状态
      */
     public static final int STATUS_NORMAL = 0;
     /**
@@ -95,5 +95,13 @@ public class SystemCanstants {
      * 表示已读状态
      */
     public static final String IS_READ="1";
+    /**
+     * 库存监控-启用状态
+     */
+    public static final String TASK_ON="1";
+    /**
+     * 库存监控-禁用状态
+     */
+    public static final String TASK_OFF="0";
 
 }

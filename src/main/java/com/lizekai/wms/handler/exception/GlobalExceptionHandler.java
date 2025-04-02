@@ -3,6 +3,7 @@ package com.lizekai.wms.handler.exception;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
 
         //从异常对象中获取提示信息封装，然后返回。ResponseResult是我们写的类
         return ResponseResult.errorResult(e.getCode(),e.getMsg());
+    }
+    // 处理SpringSecurity的权限异常
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseResult handleAccessDeniedException(AccessDeniedException e) {
+        log.error("出现了异常! {}",e);
+        return ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH);
     }
 
     //其它异常交给这里处理

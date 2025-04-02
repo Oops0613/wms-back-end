@@ -11,10 +11,10 @@ import java.util.List;
 public interface MenuMapper extends BaseMapper<Menu> {
     //查询普通用户的权限信息
     @Select(" SELECT DISTINCT m.perms " +
-            " FROM sys_user_role ur " +
-            " LEFT JOIN sys_role_menu rm ON ur.role_id=rm.role_id " +
+            " FROM sys_user u " +
+            " LEFT JOIN sys_role_menu rm ON u.role_id=rm.role_id " +
             " LEFT JOIN sys_menu m ON m.id=rm.menu_id " +
-            " WHERE ur.user_id=#{userId} " +
+            " WHERE u.id=#{userId} " +
             " AND m.menu_type in ('C','F') " +
             " AND m.`status`=0 " +
             " AND m.del_flag=0 ")

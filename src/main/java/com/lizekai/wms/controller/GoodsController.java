@@ -3,6 +3,8 @@ package com.lizekai.wms.controller;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.GetAmountChangeDto;
 import com.lizekai.wms.domain.entity.Goods;
+import com.lizekai.wms.domain.entity.GoodsMonitor;
+import com.lizekai.wms.service.GoodsMonitorService;
 import com.lizekai.wms.service.GoodsService;
 import com.lizekai.wms.service.GoodsStatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ public class GoodsController {
     private GoodsService goodsService;
     @Autowired
     private GoodsStatService goodsStatService;
+    @Autowired
+    private GoodsMonitorService goodsMonitorService;
 
     @GetMapping("/list")
     public ResponseResult getGoodsList(Goods goods,Integer pageNum, Integer pageSize){
@@ -51,5 +55,13 @@ public class GoodsController {
     @GetMapping("/getGoodsDistribution/{id}")
     public ResponseResult getGoodsDistribution(@PathVariable("id") Long id){
         return goodsStatService.getGoodsDistribution(id);
+    }
+    @GetMapping("/getMonitor/{id}")
+    public ResponseResult getMonitorByGoodsId(@PathVariable("id") Long id){
+        return goodsMonitorService.getMonitorByGoodsId(id);
+    }
+    @PostMapping("/updateMonitor")
+    public ResponseResult updateMonitor(@RequestBody GoodsMonitor goodsMonitor){
+        return goodsMonitorService.updateMonitor(goodsMonitor);
     }
 }

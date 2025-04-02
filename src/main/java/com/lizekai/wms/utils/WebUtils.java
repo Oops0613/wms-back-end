@@ -36,6 +36,8 @@ public class WebUtils {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         String fname= URLEncoder.encode(filename,"UTF-8").replaceAll("\\+", "%20");
-        response.setHeader("Content-disposition","attachment; filename="+fname);
+        //添加这个自定义Header，否则前端获取不到
+        response.addHeader("Access-Control-Expose-Headers", "Content-Disposition");
+        response.setHeader("Content-Disposition","attachment; filename="+fname);
     }
 }

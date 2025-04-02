@@ -6,6 +6,8 @@ import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.lizekai.wms.domain.entity.Inventory;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 库存表(Inventory)表服务接口
  *
@@ -16,5 +18,7 @@ import org.springframework.stereotype.Service;
 public interface InventoryService extends IService<Inventory> {
 
     ResponseResult getInventoryList(InventoryListDto dto, Integer pageNum, Integer pageSize);
+
+    void export(HttpServletResponse response);
 }
 

@@ -8,6 +8,8 @@ import com.lizekai.wms.domain.dto.RecordListDto;
 import com.lizekai.wms.domain.entity.Record;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 出入库记录表(Record)表服务接口
  *
@@ -39,5 +41,7 @@ public interface RecordService extends IService<Record> {
     ResponseResult approveReject(ApproveDto dto);
 
     ResponseResult preApprove();
+
+    void export(HttpServletResponse response);
 }
 

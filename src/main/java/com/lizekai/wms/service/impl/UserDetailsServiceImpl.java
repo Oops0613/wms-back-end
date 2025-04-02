@@ -1,10 +1,10 @@
 package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-//import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.entity.LoginUser;
 import com.lizekai.wms.domain.entity.User;
-//import com.lizekai.wms.mapper.MenuMapper;
+import com.lizekai.wms.mapper.MenuMapper;
 import com.lizekai.wms.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +19,8 @@ import java.util.Objects;
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserMapper userMapper;
-//    @Autowired
-//    private MenuMapper menuMapper;
+    @Autowired
+    private MenuMapper menuMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,11 +31,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.isNull(user)){
             throw new RuntimeException("用户不存在");
         }
-        //TODO 查询权限信息封装
-//        if(SystemCanstants.IS_ADMAIN.equals(user.getType())){
-//            List<String> perms = menuMapper.selectPermsByOtherUserId(user.getId());
-//            return new LoginUser(user,perms);
-//        }
+        // 查询权限信息封装
+        if(!SystemConstants.IS_ADMIN.equals(user.getType())){
+            List<String> perms = menuMapper.selectPermsByOtherUserId(user.getId());
+            return new LoginUser(user,perms);
+        }
         return new LoginUser(user,null);
     }
 }

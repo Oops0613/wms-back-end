@@ -1,7 +1,7 @@
 package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lizekai.wms.constants.SystemCanstants;
+import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.GetSalesCompositionDto;
 import com.lizekai.wms.domain.dto.GetWarehouseCompositionDto;
@@ -24,7 +24,7 @@ public class CategoryStatServiceImpl extends ServiceImpl<InventoryMapper, Invent
     @Override
     public ResponseResult getWarehouseComposition(GetWarehouseCompositionDto dto) {
         List<WarehouseCompositionVo> vo;
-        if(SystemCanstants.IS_PRECISE.equals(dto.getIsPrecise())){
+        if(SystemConstants.IS_PRECISE.equals(dto.getIsPrecise())){
             vo=inventoryMapper.getPreciseWarehouseComposition(dto.getWarehouseId());
         }
         else {
@@ -36,7 +36,7 @@ public class CategoryStatServiceImpl extends ServiceImpl<InventoryMapper, Invent
     @Override
     public ResponseResult getSalesComposition(GetSalesCompositionDto dto) {
         List<SalesCompositionVo> vo;
-        if(SystemCanstants.IS_PRECISE.equals(dto.getIsPrecise())){
+        if(SystemConstants.IS_PRECISE.equals(dto.getIsPrecise())){
             vo=recordMapper.getPreciseSalesComposition(dto.getDays());
         }
         else {
