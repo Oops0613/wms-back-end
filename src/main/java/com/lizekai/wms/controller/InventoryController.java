@@ -1,5 +1,6 @@
 package com.lizekai.wms.controller;
 
+import com.lizekai.wms.annotation.SystemLog;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.InventoryListDto;
 import com.lizekai.wms.service.InventoryService;
@@ -18,11 +19,13 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @GetMapping("/list")
+    @SystemLog(businessName = "分页查询库存列表")
     public ResponseResult getInventoryList(InventoryListDto dto, Integer pageNum, Integer pageSize){
         return inventoryService.getInventoryList(dto,pageNum,pageSize);
     }
     @GetMapping("/export")
     @PreAuthorize("@ps.hasPermission('inventory:export')")
+    @SystemLog(businessName = "导出所有库存列表")
     //注意返回值类型是void
     public void export(HttpServletResponse response){
         inventoryService.export(response);
