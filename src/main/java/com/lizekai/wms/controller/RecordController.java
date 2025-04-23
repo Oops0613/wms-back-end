@@ -47,17 +47,17 @@ public class RecordController {
         return recordService.getApplyById(id);
     }
     @PostMapping("addInApply")
-    @SystemLog(businessName = "查询入库申请信息")
+    @SystemLog(businessName = "新增入库申请信息")
     public ResponseResult addInApply(@RequestBody AddApplyDto dto){
         return recordService.addInApply(dto);
     }
     @PostMapping("addOutApply")
-    @SystemLog(businessName = "查询出库申请信息")
+    @SystemLog(businessName = "新增出库申请信息")
     public ResponseResult addOutApply(@RequestBody AddApplyDto dto){
         return recordService.addOutApply(dto);
     }
     @PostMapping("addAllotApply")
-    @SystemLog(businessName = "查询调拨申请信息")
+    @SystemLog(businessName = "新增调拨申请信息")
     public ResponseResult addAllotApply(@RequestBody AddApplyDto dto){
         return recordService.addAllotApply(dto);
     }

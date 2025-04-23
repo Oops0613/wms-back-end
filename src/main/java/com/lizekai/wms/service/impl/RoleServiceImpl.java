@@ -8,6 +8,7 @@ import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.RoleMenu;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.enums.RoleTypeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.RoleMapper;
 import com.lizekai.wms.domain.entity.Role;
@@ -85,7 +86,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResponseResult updateRole(Role role) {
         //不能修改超级管理员
-        if(SystemConstants.IS_ADMIN.equals(role.getId().toString())){
+        if(RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(role.getId())){
             return ResponseResult.errorResult(500,"不能修改超级管理员");
         }
         Role oldRole=getById(role.getId());

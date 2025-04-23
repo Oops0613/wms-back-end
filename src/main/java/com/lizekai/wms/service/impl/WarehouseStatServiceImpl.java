@@ -7,6 +7,7 @@ import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.dto.GetLoadRateDto;
 import com.lizekai.wms.domain.entity.Record;
 import com.lizekai.wms.domain.entity.Warehouse;
+import com.lizekai.wms.enums.ApproveStatusEnum;
 import com.lizekai.wms.mapper.WarehouseMapper;
 import com.lizekai.wms.service.RecordService;
 import com.lizekai.wms.service.WarehouseStatService;
@@ -43,7 +44,7 @@ public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Wareh
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getToId, dto.getWarehouseId())
-                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, ApproveStatusEnum.APPROVE_PASS.getCode());
         List<Record> inList = recordService.list(wrapper);
         inList.forEach(record -> {
             //日期取整，用于计算日期差
@@ -58,7 +59,7 @@ public class WarehouseStatServiceImpl extends ServiceImpl<WarehouseMapper, Wareh
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getFromId, dto.getWarehouseId())
-                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, ApproveStatusEnum.APPROVE_PASS.getCode());
         List<Record> outList = recordService.list(wrapper);
         outList.forEach(record -> {
             //日期取整，用于计算日期差

@@ -1,9 +1,9 @@
 package com.lizekai.wms.controller;
 
 import com.lizekai.wms.annotation.SystemLog;
-import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.Role;
+import com.lizekai.wms.enums.RoleTypeEnum;
 import com.lizekai.wms.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,7 @@ public class RoleController {
     @SystemLog(businessName = "删除角色")
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
         //不能删除超级管理员
-        if(SystemConstants.IS_ADMIN.equals(id.toString())){
+        if(RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(id)){
             return ResponseResult.errorResult(500,"不能删除超级管理员");
         }
         roleService.removeById(id);

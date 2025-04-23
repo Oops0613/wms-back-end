@@ -1,10 +1,10 @@
 package com.lizekai.wms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.entity.LoginUser;
 import com.lizekai.wms.domain.entity.User;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.enums.RoleTypeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.MenuMapper;
 import com.lizekai.wms.mapper.UserMapper;
@@ -34,10 +34,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new SystemException(AppHttpCodeEnum.LOGIN_ERROR);
         }
         // 查询权限信息封装
-        if(!SystemConstants.IS_ADMIN.equals(user.getType())){
+        if(!RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(user.getRoleId())){
             List<String> perms = menuMapper.selectPermsByOtherUserId(user.getId());
             return new LoginUser(user,perms);
         }
+        //如果是超级管理员直接返回
         return new LoginUser(user,null);
     }
 }
