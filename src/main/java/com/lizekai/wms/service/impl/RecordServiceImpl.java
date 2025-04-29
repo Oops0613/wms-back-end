@@ -118,6 +118,8 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         wrapper.eq(Objects.nonNull(categoryId), Record::getCategoryId, categoryId);
         wrapper.eq(StringUtils.hasText(approveStatus), Record::getApproveStatus, approveStatus);
         wrapper.like(StringUtils.hasText(goodsName), Record::getGoodsName, goodsName);
+        //按申请时间倒序排列
+        wrapper.orderByDesc(Record::getApplyTime);
         Page<Record> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
