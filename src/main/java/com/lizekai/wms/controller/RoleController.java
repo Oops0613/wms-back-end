@@ -41,12 +41,7 @@ public class RoleController {
     @DeleteMapping("/{id}")
     @SystemLog(businessName = "删除角色")
     public ResponseResult remove(@PathVariable(name = "id") Long id) {
-        //不能删除超级管理员
-        if(RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(id)){
-            return ResponseResult.errorResult(500,"不能删除超级管理员");
-        }
-        roleService.removeById(id);
-        return ResponseResult.okResult();
+        return roleService.removeRole(id);
     }
 
     @GetMapping("/listAllRole")

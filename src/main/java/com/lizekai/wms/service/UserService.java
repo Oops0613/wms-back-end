@@ -25,5 +25,6 @@ public interface UserService extends IService<User> {
     ResponseResult editPassword(User user);
 
     ResponseResult resetPassword(Long userId);
+    int countUserByRole(Long roleId);
 }
 
