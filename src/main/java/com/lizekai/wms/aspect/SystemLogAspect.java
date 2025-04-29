@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @Component
 @Aspect//告诉spring容器，SystemLogAspect是切面类
@@ -68,7 +69,7 @@ public class SystemLogAspect {
         // 打印请求的 IP
         log.info("访问IP    : {}",request.getRemoteHost());
         // 打印请求入参。JSON.toJSONString十FastJson提供的工具方法，能把数组转成JSON
-        log.info("传入参数   : {}", JSON.toJSONString(joinPoint.getArgs()));
+        log.info("传入参数   : {}", Arrays.toString(joinPoint.getArgs()));
     }
 
     //上面的printLog方法执行之后会去调用下面这个handleAfter方法
