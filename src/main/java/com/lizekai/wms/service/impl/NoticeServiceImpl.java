@@ -58,6 +58,7 @@ public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> impleme
         String keyword = dto.getKeyWord();
         wrapper.like(StringUtils.hasText(keyword), Notice::getTitle, keyword);
         wrapper.or().like(StringUtils.hasText(keyword), Notice::getContent, keyword);
+        wrapper.orderByDesc(Notice::getUpdateTime);
         Page<Notice> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         page.getRecords().forEach(notice -> {

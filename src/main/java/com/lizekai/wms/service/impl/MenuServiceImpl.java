@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lizekai.wms.constants.SystemConstants;
 import com.lizekai.wms.domain.vo.MenuTreeVo;
+import com.lizekai.wms.enums.MenuTypeEnum;
 import com.lizekai.wms.mapper.MenuMapper;
 import com.lizekai.wms.domain.entity.Menu;
 import com.lizekai.wms.service.MenuService;
@@ -34,7 +35,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         //用户是管理员
         if(SecurityUtils.isAdmin()){
             LambdaQueryWrapper<Menu> wrapper=new LambdaQueryWrapper<>();
-            wrapper.in(Menu::getMenuType, SystemConstants.TYPE_MENU, SystemConstants.TYPE_BUTTON);
+            wrapper.in(Menu::getMenuType,
+                    MenuTypeEnum.TYPE_MENU.getCode(),
+                    MenuTypeEnum.TYPE_BUTTON.getCode());
             wrapper.eq(Menu::getStatus, SystemConstants.STATUS_NORMAL);
             List<String> perms = list(wrapper).stream()
                     .map(Menu::getPerms)
@@ -70,7 +73,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         queryWrapper.like(StringUtils.hasText(menu.getMenuName()),Menu::getMenuName,menu.getMenuName());
         queryWrapper.eq(StringUtils.hasText(menu.getStatus()),Menu::getStatus,menu.getStatus());
         //忽略按钮类型的菜单
-        queryWrapper.in(Menu::getMenuType, Arrays.asList(SystemConstants.TYPE_MENU, SystemConstants.TYPE_TOP_MENU));
+        queryWrapper.in(Menu::getMenuType,
+                Arrays.asList(MenuTypeEnum.TYPE_MENU.getCode(), MenuTypeEnum.TYPE_TOP_MENU.getCode()));
         //排序 parent_id和order_num
         queryWrapper.orderByAsc(Menu::getParentId,Menu::getOrderNum);
         List<Menu> menus = list(queryWrapper);
@@ -93,8 +97,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public List<MenuTreeVo> selectRouteTree() {
         LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
         List<String> menuTypes=new ArrayList<>();
-        menuTypes.add(SystemConstants.TYPE_MENU);
-        menuTypes.add(SystemConstants.TYPE_TOP_MENU);
+        menuTypes.add(MenuTypeEnum.TYPE_MENU.getCode());
+        menuTypes.add(MenuTypeEnum.TYPE_TOP_MENU.getCode());
         queryWrapper.in(Menu::getMenuType,menuTypes);
         //排序 parent_id和order_num
         queryWrapper.orderByAsc(Menu::getParentId,Menu::getOrderNum);

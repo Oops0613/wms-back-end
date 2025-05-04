@@ -11,6 +11,8 @@ import com.lizekai.wms.domain.entity.Record;
 import com.lizekai.wms.domain.vo.GoodsAmountChangeVo;
 import com.lizekai.wms.domain.vo.GoodsDistributionVo;
 import com.lizekai.wms.domain.vo.GoodsWarningListVo;
+import com.lizekai.wms.enums.ApplyTypeEnum;
+import com.lizekai.wms.enums.ApproveStatusEnum;
 import com.lizekai.wms.mapper.GoodsMapper;
 import com.lizekai.wms.mapper.InventoryMapper;
 import com.lizekai.wms.service.GoodsStatService;
@@ -55,17 +57,17 @@ public class GoodsStatServiceImpl extends ServiceImpl<GoodsMapper, Goods> implem
         wrapper.ge(Record::getApproveTime, fromDate)
                 .le(Record::getApproveTime, now)
                 .eq(Record::getGoodsId, dto.getGoodsId())
-                .eq(Record::getApproveStatus, SystemConstants.APPROVE_PASS);
+                .eq(Record::getApproveStatus, ApproveStatusEnum.APPROVE_PASS.getCode());
         List<Record> recordList = recordService.list(wrapper);//该货物的出入库记录
         recordList.forEach(record -> {
             //日期取整，用于计算日期差
             LocalDate fromDay = record.getApproveTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate today = LocalDate.now();
             int gap = (int) ChronoUnit.DAYS.between(fromDay, today);
-            if(SystemConstants.IN_APPLY.equals(record.getType())){
+            if(ApplyTypeEnum.IN_APPLY.getCode().equals(record.getType())){
                 inAmount.set(days-gap,record.getAmount());
             }
-            else if(SystemConstants.OUT_APPLY.equals(record.getType())){
+            else if(ApplyTypeEnum.OUT_APPLY.getCode().equals(record.getType())){
                 outAmount.set(days-gap,record.getAmount());
             }
         });

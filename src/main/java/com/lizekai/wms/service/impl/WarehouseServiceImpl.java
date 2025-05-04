@@ -26,7 +26,7 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     public ResponseResult getWarehouseList(Warehouse warehouse, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<Warehouse> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.hasText(warehouse.getName()), Warehouse::getName, warehouse.getName());
-
+        wrapper.orderByDesc(Warehouse::getUpdateTime);
         Page<Warehouse> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));
@@ -45,7 +45,8 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
     @Override
     public ResponseResult updateWarehouse(Warehouse warehouse) {
         Warehouse old = getById(warehouse.getId());
-        if (old.getRemainingCapacity() < old.getCapacity()) {
+        if (old.getRemainingCapacity() < old.getCapacity()&&
+            !old.getCapacity().equals(warehouse.getCapacity())) {
             return ResponseResult.errorResult(500, "该仓库正在使用中，无法修改");
         }
         Warehouse oldWarehouse = getById(warehouse.getId());
@@ -54,7 +55,10 @@ public class WarehouseServiceImpl extends ServiceImpl<WarehouseMapper, Warehouse
                 throw new SystemException(AppHttpCodeEnum.WAREHOUSE_NAME_EXIST);
             }
         }
-        warehouse.setRemainingCapacity(warehouse.getCapacity());
+        //如果入参capacity和原来的不同，说明需要更改仓库容量
+        if(!old.getCapacity().equals(warehouse.getCapacity())){
+            warehouse.setRemainingCapacity(warehouse.getCapacity());
+        }
         updateById(warehouse);
         return ResponseResult.okResult();
     }

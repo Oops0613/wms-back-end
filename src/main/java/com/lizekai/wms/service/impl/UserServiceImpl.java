@@ -10,7 +10,6 @@ import com.lizekai.wms.enums.AppHttpCodeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.UserMapper;
 import com.lizekai.wms.domain.entity.User;
-import com.lizekai.wms.service.RoleService;
 import com.lizekai.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,8 +30,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private RoleService roleService;
     @Override
     public ResponseResult selectUserList(User user, Integer pageNum, Integer pageSize) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper();
@@ -126,6 +123,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setPassword(passwordEncoder.encode(SystemConstants.ORIGINAL_PASSWORD));
         updateById(user);
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public int countUserByRole(Long roleId) {
+        LambdaQueryWrapper<User> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(User::getRoleId,roleId);
+        return count(wrapper);
     }
 
     private boolean existUserName(String userName){

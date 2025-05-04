@@ -50,6 +50,8 @@ public class InventoryServiceImpl extends ServiceImpl<InventoryMapper, Inventory
         if(SystemConstants.IGNORE_ZERO.equals(dto.getIgnoreZero())){
             wrapper.gt(Inventory::getAmount,0);
         }
+        //按更新时间倒序排列
+        wrapper.orderByDesc(Inventory::getUpdateTime);
         Page<Inventory> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         return ResponseResult.okResult(new PageVo(page.getRecords(), page.getTotal()));

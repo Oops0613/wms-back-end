@@ -23,6 +23,8 @@ public interface RoleService extends IService<Role> {
     ResponseResult insertRole(Role role);
     //修改角色-保存修改好的角色信息
     ResponseResult updateRole(Role role);
+    //删除角色
+    ResponseResult removeRole(Long roleId);
     //新增用户-①查询角色列表接口
     List<Role> selectRoleAll();
 

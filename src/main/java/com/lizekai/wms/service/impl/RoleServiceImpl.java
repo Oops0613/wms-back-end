@@ -8,11 +8,13 @@ import com.lizekai.wms.domain.ResponseResult;
 import com.lizekai.wms.domain.entity.RoleMenu;
 import com.lizekai.wms.domain.vo.PageVo;
 import com.lizekai.wms.enums.AppHttpCodeEnum;
+import com.lizekai.wms.enums.RoleTypeEnum;
 import com.lizekai.wms.handler.exception.SystemException;
 import com.lizekai.wms.mapper.RoleMapper;
 import com.lizekai.wms.domain.entity.Role;
 import com.lizekai.wms.service.RoleMenuService;
 import com.lizekai.wms.service.RoleService;
+import com.lizekai.wms.service.UserService;
 import com.lizekai.wms.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,10 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RoleMenuService roleMenuService;
+    @Autowired
+    private UserService userService;
     @Override
     public List<String> selectRoleKeyByUserId(Long id) {
         //用户是管理员
@@ -66,8 +72,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return ResponseResult.okResult(pageVo);
     }
 
-    @Autowired
-    private RoleMenuService roleMenuService;
+
 
     @Override
     @Transactional
@@ -85,7 +90,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResponseResult updateRole(Role role) {
         //不能修改超级管理员
-        if(SystemConstants.IS_ADMIN.equals(role.getId().toString())){
+        if(RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(role.getId())){
             return ResponseResult.errorResult(500,"不能修改超级管理员");
         }
         Role oldRole=getById(role.getId());
@@ -98,6 +103,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         updateById(role);
         roleMenuService.deleteRoleMenuByRoleId(role.getId());
         insertRoleMenu(role);
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult removeRole(Long roleId) {
+        //不能删除超级管理员
+        if(RoleTypeEnum.ROLE_SUPER_ADMIN.getCode().equals(roleId)){
+            return ResponseResult.errorResult(500,"不能删除超级管理员");
+        }
+        //不能删除正在使用的角色
+        if(userService.countUserByRole(roleId)>0){
+            return ResponseResult.errorResult(500,"不能删除正在使用的角色");
+        }
+        removeById(roleId);
         return ResponseResult.okResult();
     }
 
