@@ -34,7 +34,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.hasText(goods.getName()), Goods::getName, goods.getName());
         wrapper.eq(!Objects.isNull(goods.getCategoryId()), Goods::getCategoryId, goods.getCategoryId());
-
+        wrapper.orderByDesc(Goods::getUpdateTime);
         Page<Goods> page = new Page<>(pageNum, pageSize);
         page(page, wrapper);
         page.getRecords().forEach(item->{
