@@ -14,6 +14,7 @@ import com.lizekai.wms.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Objects;
@@ -72,11 +73,14 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResponseResult deleteGoods(Long id) {
         Goods goods = getById(id);
         if (!Objects.isNull(goods) && goods.getAmount() > 0) {
             return ResponseResult.errorResult(500, "该货物正在使用中，无法删除");
         }
+        //同时删除库存监控表的数据
+        goodsMonitorService.deleteMonitorByGoodsId(id);
         removeById(id);
         return ResponseResult.okResult();
     }
