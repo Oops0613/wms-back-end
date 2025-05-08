@@ -18,7 +18,7 @@ public interface RecordMapper extends BaseMapper<Record> {
             " INNER JOIN wms_category AS ctg ON rcd.category_id = ctg.id " +
             " LEFT JOIN wms_category AS parent_ctg ON ctg.parent_id = parent_ctg.id "+
             "<where>" +
-            " type=2 AND approve_status=1  " +
+            " type=2 AND approve_status=1 AND rcd.del_flag=0 " +
             "   <if test='days > 0'>" +
             "       AND approve_time>= CURDATE() - INTERVAL #{days} DAY " +
             "   </if>" +
@@ -31,7 +31,7 @@ public interface RecordMapper extends BaseMapper<Record> {
             " FROM wms_record AS rcd " +
             " INNER JOIN wms_goods AS gds ON rcd.goods_id = gds.id " +
             "<where>" +
-            " type=2 AND approve_status=1 " +
+            " type=2 AND approve_status=1 AND rcd.del_flag=0 " +
             "   <if test='days > 0'>" +
             "       AND approve_time>= CURDATE() - INTERVAL #{days} DAY " +
             "   </if>" +
@@ -50,6 +50,7 @@ public interface RecordMapper extends BaseMapper<Record> {
             "   </if>" +
             "</where>" +
             " GROUP BY apply_by " +
+            " ORDER BY amount DESC " +
             "</script>")
     List<WorkLoadVo> getApplyWorkLoad(Long days);
     @Select("<script>" +
@@ -63,6 +64,7 @@ public interface RecordMapper extends BaseMapper<Record> {
             "   </if>" +
             "</where>" +
             " GROUP BY approve_by " +
+            " ORDER BY amount DESC " +
             "</script>")
     List<WorkLoadVo> getApproveWorkLoad(Long days);
 }
