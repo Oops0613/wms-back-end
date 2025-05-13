@@ -81,7 +81,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             throw new SystemException(AppHttpCodeEnum.ROLENAME_EXIST);
         }
         save(role);
-        if(CollectionUtils.isEmpty(role.getMenuIds())){
+        if(!CollectionUtils.isEmpty(role.getMenuIds())){
             insertRoleMenu(role);
         }
         return ResponseResult.okResult();

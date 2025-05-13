@@ -5,10 +5,12 @@ spring:
   # 数据库连接信息
   datasource:
     url: jdbc:mysql://localhost:3306/wms?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
+    username: root #本地是root 服务器是WMS
     password: fv45kl86
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  redis:
+    host: localhost
+    port: 6379
   servlet:
     # 文件上传
     multipart:
@@ -47,12 +49,6 @@ mybatis-plus:
       logic-not-delete-value: 0
       # 主键自增策略，以mysql数据库为准
       id-type: auto
-
-
-oss:
-  accessKey: 3Vq-bWFAS8RCXxvwORL5GZCGK0qcytGspyWOrbb1
-  secretKey: 1807fs0TpmgsJXbxP6ozMiVLz8VKW9W1xqcxLs2k
-  bucket: lizekai-blog
 
 
 
