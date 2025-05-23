@@ -56,6 +56,13 @@ public class GoodsMonitorServiceImpl extends ServiceImpl<GoodsMonitorMapper, Goo
     }
 
     @Override
+    public boolean deleteMonitorByGoodsId(Long id) {
+        LambdaQueryWrapper<GoodsMonitor> wrapper=new LambdaQueryWrapper<>();
+        wrapper.eq(GoodsMonitor::getGoodsId,id);
+        return remove(wrapper);
+    }
+
+    @Override
     public String getMonitorStatus(Long goodsId) {
         LambdaQueryWrapper<GoodsMonitor> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(GoodsMonitor::getGoodsId,goodsId);

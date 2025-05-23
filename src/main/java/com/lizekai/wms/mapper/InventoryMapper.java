@@ -13,7 +13,7 @@ import java.util.List;
 public interface InventoryMapper extends BaseMapper<Inventory> {
     @Select(" SELECT warehouse_id,warehouse_name,SUM(amount) AS amount " +
             " FROM wms_inventory " +
-            " WHERE goods_id=#{goodsId} " +
+            " WHERE goods_id=#{goodsId} AND amount>0 " +
             " GROUP BY warehouse_id,warehouse_name " +
             " ORDER BY amount DESC " +
             " LIMIT 20")
@@ -24,6 +24,7 @@ public interface InventoryMapper extends BaseMapper<Inventory> {
             " INNER JOIN wms_category AS ctg ON ivt.category_id = ctg.id " +
             " LEFT JOIN wms_category AS parent_ctg ON ctg.parent_id = parent_ctg.id "+
             "<where>" +
+            "  ivt.amount>0 " +
             "   <if test='w_id > 0'>" +
             "       AND ivt.warehouse_id = #{w_id} " +
             "   </if>" +
@@ -35,6 +36,7 @@ public interface InventoryMapper extends BaseMapper<Inventory> {
             " SELECT category_id,category_name,SUM(volume) AS volume " +
             " FROM wms_inventory " +
             "<where>" +
+            " amount>0 " +
             "   <if test='w_id > 0'>" +
             "       AND warehouse_id = #{w_id} " +
             "   </if>" +

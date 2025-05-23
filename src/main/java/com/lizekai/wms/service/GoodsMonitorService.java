@@ -20,6 +20,7 @@ public interface GoodsMonitorService extends IService<GoodsMonitor> {
     ResponseResult updateMonitor(GoodsMonitor goodsMonitor);
 
     ResponseResult getMonitorByGoodsId(Long id);
+    boolean deleteMonitorByGoodsId(Long id);
 
     String getMonitorStatus(Long goodsId);
 }

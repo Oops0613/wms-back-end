@@ -95,6 +95,8 @@ public class GoodsStatServiceImpl extends ServiceImpl<GoodsMapper, Goods> implem
         // 当前时间加上三天（过期预警的标准线）
         LocalDateTime deadline = LocalDateTime.now().plusDays(SystemConstants.DAYS_TO_EXPIRE);
         wrapper.le(Inventory::getExpirationTime,deadline);
+        // 库存数量大于0的
+        wrapper.gt(Inventory::getAmount,0);
         List<Inventory> expiredList=inventoryService.list(wrapper);
         GoodsWarningListVo vo=new GoodsWarningListVo(lowList,highList,expiredList);
         return ResponseResult.okResult(vo);

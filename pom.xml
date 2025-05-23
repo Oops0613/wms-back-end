@@ -38,6 +38,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
+<!--            <version>3.4.2</version>-->
             <version>3.4.3</version>
         </dependency>
         <!--      fastjson-->
@@ -109,7 +110,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.lizekai.wms.WmsApplication</mainClass>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>
